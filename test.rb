@@ -1,36 +1,45 @@
-require 'test'
-
-a=5
-b=6
-c=a+b
-
-def test(a,b)
-	return a>=b
-end
-
 =begin
 
-commm
-mmm
-
-mmm
-ent
+This is a test program.
 
 =end
 
-# single line comment
+require 'test'
 
-a=true
-b=false
-c=a||b
-d=a?3:5
-if not defined?(e) do
-	e=5
-end
-f="test test \" test"
-f='test test "test" test'
-f='test \t\t test'
 
-def test?(g,a)
-	return -1.0002
+def greater?(a,b)
+  return a>=b
 end
+
+def biggest(a,b)
+  greater?(a,b) ? a : b
+end
+
+def pi
+  return (22/7)
+end
+
+def strlen(str)
+  i=0
+  while str[i] != "\n"
+    i+=1
+  end
+end
+
+# Define variables
+
+a = 5
+b = 6
+c = a + b
+
+c -= 1 while greater?(a,c)
+
+if c > pi
+  c = a || b
+else
+  c = !(a && b) || (a & b)
+end
+
+str1 = "i am a single quote string"
+str2 = "i am a double quotes string"
+str3 = 'i am strin with escaped things inside test \t\t \ntest'
