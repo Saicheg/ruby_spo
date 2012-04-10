@@ -13,10 +13,10 @@
 %token LEFT_RBRACKET RIGHT_RBRACKET
 %token LEFT_FBRACKET RIGHT_FBRACKET
 %token LEFT_SBRACKET RIGHT_SBRACKET
-%token COMMA SEMICOLON								   /* , ; */
+%token COMMA SEMICOLON CRLF								   /* , ; \n */
 
 // identifiers, numbers and strings
-%token ID_GLOBAL ID_METHOD ID LITERAL CHAR
+%token ID_GLOBAL ID_FUNCTION ID LITERAL CHAR
 %token NUM_FLOAT NUM_INTEGER
 
 %left DEFINED 									   /* defined? */
@@ -35,21 +35,70 @@
 
 %%
 
-phrase : phrase expr
-	| expr
+program	: /* empty */
+			| expression_list
+			;
 
-;
+/* expression - any code block */
+expression_list	: /* empty */
+						| expression terminator
+						| expression_list expression terminator
+						;
 
+expression	: /* empty */
+				| function_definition
+				| require_block
+				| calculable
+				;
 
+/* calculable - code block, which returns a value */				
+calculable_list	: calculable terminator
+						| calculable_list calculable terminator
+						;
+						
+calculable	: assignment
+				| rvalue
+				;
 
+function_definition	: function_header function_body END
+							;
 
-terms	: term
-		| terms term
-		;
+function_body	: /* empty */
+					| calculable
+					| calculable function_return
+					;
 
-term	: ';'
-		| '\n'
-		;
+function_header	: DEF function_name CRLF
+						| DEF function_name function_params CRLF
+						;
+
+function_name	: ID_METHOD
+					| ID
+					;
+
+function_params	: LEFT_RBRACKET function_params_list RIGHT_RBRACKET
+						;
+
+function_params_list	: function_parameter
+							| function_params_list COMMA function_parameter
+							;
+
+// Allowed funciton parameters							
+function_parameter	: ID
+							| rvalue
+							;
+
+function_return	: RETURN calculable
+						;
+
+terminator	: terminator terminator
+				| SEMICOLON
+				| CRLF
+				;
+
+line_skip	: CRLF
+				| line_skip CRLF
+				;
 
 none	: // none
 	;
