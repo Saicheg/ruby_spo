@@ -24,6 +24,7 @@ def strlen(str)
   while str[i] != "\n"
     i+=1
   end
+  i
 end
 
 # Define variables
