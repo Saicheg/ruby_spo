@@ -52,6 +52,7 @@ expression_list	: expression terminator
 expression	: function_definition
 				| require_block
 				| calculable
+				| if_statement
 //				| line_skip
 				;
 
@@ -104,6 +105,11 @@ function_call_param_list	: /* empty */
 function_call_params	: rvalue
 							| function_call_params COMMA rvalue
 							;
+
+if_statement	: IF rvalue THEN expression_list ELSE expression_list END
+					| IF rvalue THEN expression_list END
+					;
+
 
 assignment	: lvalue ASSIGN rvalue
 				| lvalue PLUS_ASSIGN rvalue
