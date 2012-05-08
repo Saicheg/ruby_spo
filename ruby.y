@@ -51,7 +51,11 @@ expression	: /* empty */
 				| function_definition
 				| require_block
 				| calculable
+				| line_skip
 				;
+				
+require_block	: REQUIRE LITERAL terminator
+					;
 
 /* calculable - code block, which returns a value */				
 calculable_list	: calculable terminator
@@ -74,7 +78,7 @@ function_definition_header	: DEF function_definition_name CRLF
 									| DEF function_definition_name function_definition_params CRLF
 									;
 
-function_definition_name	: ID_METHOD
+function_definition_name	: ID_FUNCTION
 									| ID
 									;
 
@@ -82,7 +86,7 @@ function_definition_params	: LEFT_RBRACKET function_definition_params_list RIGHT
 									;
 
 function_definition_params_list	: function_definition_parameter
-											| function_definition_params_list COMMA function_definition_parameter
+											| function_definition_parameter COMMA function_definition_params_list
 											;
 
 // Allowed funciton parameters							
@@ -105,10 +109,7 @@ terminator	: terminator SEMICOLON
 				;
 
 line_skip	: CRLF
-				| line_skip CRLF
+				| CRLF line_skip
 				;
-
-none	: // none
-	;
 
 %%
