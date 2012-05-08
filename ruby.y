@@ -33,7 +33,6 @@
 %right ASSIGN PLUS_ASSIGN MINUS_ASSIGN MUL_ASSIGN DIV_ASSIGN MOD_ASSIGN EXP_ASSIGN /* = += -+ *= /= %= **=  */
 %right NOT BIT_NOT 								   /* ! ~ */
 
-%token RVALUE
 %token ASS
 
 %start program
@@ -43,7 +42,7 @@
 program	: /* empty */
 			| expression_list
 			;
-		
+
 /* expression - any code block */
 expression_list	: expression terminator
 						| expression_list expression terminator
@@ -55,15 +54,15 @@ expression	: function_definition
 				| calculable
 //				| line_skip
 				;
-				
+
 require_block	: REQUIRE LITERAL
 					;
 
-/* calculable - code block, which returns a value */				
+/* calculable - code block, which returns a value */
 calculable_list	: calculable terminator
 						| calculable_list calculable terminator
 						;
-						
+
 calculable	: assignment
 				| rvalue
 				;
@@ -91,18 +90,75 @@ function_definition_params_list	: function_definition_parameter
 											| function_definition_parameter COMMA function_definition_params_list
 											;
 
-// Allowed funciton parameters							
+// Allowed funciton parameters
 function_definition_parameter	: ID
 										;
 function_return	: RETURN calculable
 						;
-						
-						
-assignment	: ASS
+
+
+assignment	: lvalue ASSIGN rvalue
+				| lvalue PLUS_ASSIGN rvalue
+				| lvalue MINUS_ASSIGN rvalue
+				| lvalue MUL_ASSIGN rvalue
+				| lvalue DIV_ASSIGN rvalue
+				| lvalue MOD_ASSIGN rvalue
+				| lvalue EXP_ASSIGN rvalue
 				;
-				
-rvalue	: RVALUE
+
+array_definition	: LEFT_SBRACKET array_definition_elements RIGHT_SBRACKET
+						;
+
+array_definition_elements	: rvalue
+									| array_definition_elements COMMA rvalue
+									;
+
+array_selector	: ID LEFT_SBRACKET rvalue RIGHT_SBRACKET
+					| ID_GLOBAL LEFT_SBRACKET rvalue RIGHT_SBRACKET
+//					| function_call array_selector_param
+					;
+
+lvalue	: ID
+			| ID_GLOBAL
+			| array_selector
 			;
+
+rvalue	: lvalue
+			| LEFT_RBRACKET rvalue RIGHT_RBRACKET
+			| array_definition
+			| CHAR
+			| LITERAL
+			| NUM_FLOAT
+			| NUM_INTEGER
+			| DEFINED defined_param
+			| NOT rvalue
+			| BIT_NOT rvalue
+			| rvalue EQUAL rvalue
+			| rvalue NOT_EQUAL rvalue
+			| rvalue LESS_EQUAL rvalue
+			| rvalue LESS rvalue
+			| rvalue GREATER rvalue
+			| rvalue GREATER_EQUAL rvalue
+			| rvalue OR rvalue
+			| rvalue AND rvalue
+			| rvalue BIT_OR rvalue
+			| rvalue BIT_XOR rvalue
+			| rvalue BIT_AND rvalue
+			| rvalue BIT_SHL rvalue
+			| rvalue BIT_SHR rvalue
+			| rvalue PLUS rvalue
+			| rvalue MINUS rvalue
+			| rvalue MUL rvalue
+			| rvalue DIV rvalue
+			| rvalue MOD rvalue
+			| rvalue EXP rvalue
+			;
+
+defined_param	: ID
+					| ID_GLOBAL
+					| ID_FUNCTION
+					| LEFT_RBRACKET defined_param RIGHT_RBRACKET
+					;
 
 terminator	: terminator SEMICOLON
 				| terminator CRLF
