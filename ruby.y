@@ -33,6 +33,8 @@
 %right ASSIGN PLUS_ASSIGN MINUS_ASSIGN MUL_ASSIGN DIV_ASSIGN MOD_ASSIGN EXP_ASSIGN /* = += -+ *= /= %= **=  */
 %right NOT BIT_NOT 								   /* ! ~ */
 
+%start program
+
 %%
 
 program	: /* empty */
@@ -60,38 +62,44 @@ calculable	: assignment
 				| rvalue
 				;
 
-function_definition	: function_header function_body END
+function_definition	: function_definition_header function_definition_body END
 							;
 
-function_body	: /* empty */
-					| calculable
-					| calculable function_return
-					;
+function_definition_body	: /* empty */
+									| calculable_list
+									| calculable_list function_return
+									;
 
-function_header	: DEF function_name CRLF
-						| DEF function_name function_params CRLF
-						;
+function_definition_header	: DEF function_definition_name CRLF
+									| DEF function_definition_name function_definition_params CRLF
+									;
 
-function_name	: ID_METHOD
-					| ID
-					;
+function_definition_name	: ID_METHOD
+									| ID
+									;
 
-function_params	: LEFT_RBRACKET function_params_list RIGHT_RBRACKET
-						;
+function_definition_params	: LEFT_RBRACKET function_definition_params_list RIGHT_RBRACKET
+									;
 
-function_params_list	: function_parameter
-							| function_params_list COMMA function_parameter
-							;
+function_definition_params_list	: function_definition_parameter
+											| function_definition_params_list COMMA function_definition_parameter
+											;
 
 // Allowed funciton parameters							
-function_parameter	: ID
-							| rvalue
-							;
-
+function_definition_parameter	: ID
+										;
 function_return	: RETURN calculable
 						;
+						
+						
+assignment	:
+				;
+				
+rvalue	:
+			;
 
-terminator	: terminator terminator
+terminator	: terminator SEMICOLON
+				| terminator CRLF
 				| SEMICOLON
 				| CRLF
 				;
