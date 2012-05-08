@@ -35,7 +35,7 @@ c = a + b
 
 c -= 1 while greater?(a,c)
 
-if c > pi
+if c > pi()
   c = a || b
 else
   c = !(a && b) || (a & b)

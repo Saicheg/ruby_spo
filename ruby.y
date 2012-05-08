@@ -75,27 +75,35 @@ function_definition_body	: /* empty */
 									| calculable_list function_return
 									;
 
-function_definition_header	: DEF function_definition_name CRLF
-									| DEF function_definition_name function_definition_params CRLF
+function_definition_header	: DEF function_name CRLF
+									| DEF function_name function_definition_params CRLF
 									;
 
-function_definition_name	: ID_FUNCTION
+function_name	: ID_FUNCTION
 									| ID
 									;
 
 function_definition_params	: LEFT_RBRACKET function_definition_params_list RIGHT_RBRACKET
 									;
 
-function_definition_params_list	: function_definition_parameter
-											| function_definition_parameter COMMA function_definition_params_list
+function_definition_params_list	: ID
+											| ID COMMA function_definition_params_list
 											;
 
-// Allowed funciton parameters
-function_definition_parameter	: ID
-										;
+
 function_return	: RETURN calculable
 						;
 
+function_call	: function_name LEFT_RBRACKET function_call_param_list RIGHT_RBRACKET
+					;
+
+function_call_param_list	: /* empty */
+									| function_call_params
+									;
+
+function_call_params	: rvalue
+							| function_call_params COMMA rvalue
+							;
 
 assignment	: lvalue ASSIGN rvalue
 				| lvalue PLUS_ASSIGN rvalue
@@ -126,6 +134,7 @@ lvalue	: ID
 rvalue	: lvalue
 			| LEFT_RBRACKET rvalue RIGHT_RBRACKET
 			| array_definition
+			| function_call
 			| CHAR
 			| LITERAL
 			| NUM_FLOAT
