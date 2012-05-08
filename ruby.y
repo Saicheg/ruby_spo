@@ -33,6 +33,9 @@
 %right ASSIGN PLUS_ASSIGN MINUS_ASSIGN MUL_ASSIGN DIV_ASSIGN MOD_ASSIGN EXP_ASSIGN /* = += -+ *= /= %= **=  */
 %right NOT BIT_NOT 								   /* ! ~ */
 
+%token RVALUE
+%token ASS
+
 %start program
 
 %%
@@ -40,21 +43,20 @@
 program	: /* empty */
 			| expression_list
 			;
-
+		
 /* expression - any code block */
-expression_list	: /* empty */
-						| expression terminator
+expression_list	: expression terminator
 						| expression_list expression terminator
+//						| expression_list
 						;
 
-expression	: /* empty */
-				| function_definition
+expression	: function_definition
 				| require_block
 				| calculable
-				| line_skip
+//				| line_skip
 				;
 				
-require_block	: REQUIRE LITERAL terminator
+require_block	: REQUIRE LITERAL
 					;
 
 /* calculable - code block, which returns a value */				
@@ -96,10 +98,10 @@ function_return	: RETURN calculable
 						;
 						
 						
-assignment	:
+assignment	: ASS
 				;
 				
-rvalue	:
+rvalue	: RVALUE
 			;
 
 terminator	: terminator SEMICOLON
@@ -107,9 +109,4 @@ terminator	: terminator SEMICOLON
 				| SEMICOLON
 				| CRLF
 				;
-
-line_skip	: CRLF
-				| CRLF line_skip
-				;
-
 %%
