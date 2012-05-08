@@ -21,7 +21,7 @@ end
 
 def strlen(str)
   i=0
-  while str[i] != "\n"
+  while (str[i] != "\n")
     i+=1
   end
   i
@@ -33,9 +33,9 @@ a = 5
 b = 6
 c = a + b
 
-c -= 1 while greater?(a,c)
+c -= 1 while (greater?(a,c))
 
-if c > pi()
+if (c > pi())
   c = a || b
 else
   c = !(a && b) || (a & b)

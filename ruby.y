@@ -106,8 +106,8 @@ function_call_params	: rvalue
 							| function_call_params COMMA rvalue
 							;
 
-if_statement	: IF rvalue THEN expression_list ELSE expression_list END
-					| IF rvalue THEN expression_list END
+if_statement	: IF LEFT_RBRACKET rvalue RIGHT_RBRACKET expression_list ELSE expression_list END
+					| IF LEFT_RBRACKET rvalue RIGHT_RBRACKET expression_list END
 					;
 
 
