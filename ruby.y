@@ -7,11 +7,7 @@
 %token CASE WHEN
 %token REQUIRE
 
-// commentaries
-%token C_BEGIN C_END
-
 %token LEFT_RBRACKET RIGHT_RBRACKET
-%token LEFT_FBRACKET RIGHT_FBRACKET
 %token LEFT_SBRACKET RIGHT_SBRACKET
 %token COMMA SEMICOLON CRLF								   /* , ; \n */
 
