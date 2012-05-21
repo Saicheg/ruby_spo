@@ -1,3 +1,15 @@
+%{
+#include "ruby.defines.h"
+%}
+
+%union TokenType
+{
+	double doubleValue;
+	int intValue;
+	string* stringValue;
+	
+}
+
 // keywords
 %token IF THEN ELSE ELSIF UNLESS
 %token DEF END UNDEF ALIAS RETURN
