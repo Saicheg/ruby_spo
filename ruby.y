@@ -1,14 +1,25 @@
 %{
-#include "ruby.defines.h"
+ //#include "ruby.defines.h"
+  #include <stdio.h>
+  #include <stdlib.h>
+  #include <string.h>
+
+ extern int yylineno;
+ extern int yylex();
+ extern FILE* yyin;
+
+ #define YYPRINT(file, type, value) fprintf(file, "%d", value);
 %}
 
-%union TokenType
+%error-verbose
+
+/*%union TokenType
 {
 	double doubleValue;
 	int intValue;
 	string* stringValue;
-	
 }
+*/
 
 // keywords
 %token IF THEN ELSE ELSIF UNLESS
@@ -52,8 +63,9 @@ program	: /* empty */
 
 /* expression - any code block */
 expression_list	: expression terminator
-						| expression_list expression terminator
-						;
+				| expression_list expression terminator
+				| error
+				;
 
 expression	: function_definition
             | undef_statement
@@ -222,3 +234,23 @@ terminator	: terminator SEMICOLON
 				| CRLF
 				;
 %%
+
+#include <stdio.h>
+
+extern char yytext[];
+extern int column;
+
+int yyerror(char const *s)
+{
+	fflush(stdout);
+	printf("\n%*s - %*s\n\n", column, "^", column, s);
+	return 0;
+}
+
+main(int argc, char *argv[])
+{
+  //yydebug=1;
+  ++argv, ++argc;
+  yyin = fopen(argv[0], "r");
+  yyparse(); 
+}

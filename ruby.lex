@@ -4,6 +4,7 @@
 #include <fstream>
 #include <map>
 #include <string>
+#include "ruby.bison.defines.h"
 using namespace std;
 
 map<string,int> tmap;
@@ -12,335 +13,99 @@ map<string,int>::iterator it;
 %}
 
 DIGIT		[0-9]
-INT		-?[0-9]+
+INT			-?[0-9]+
 FLOAT		-?[0-9]*\.[0-9]+
 ID			[a-zA-Z_][a-zA-Z0-9_]*
 
 %%
 
 
-"alias"	{
-	cout << "Alias found" << endl;
-	tmap["alias"]++;
-	}
-"break"	{
-	cout << "Break found" << endl;
-	tmap["break"]++;
-	}
-"case"	{
-	cout << "Case found" << endl;
-	tmap["case"]++;
-	}
-"def"	{
-	cout << "Def found" << endl;
-	tmap["def"]++;
-	}
-"defined?"	{
-	cout << "Defined? found" << endl;
-	tmap["defined?"]++;
-	}
-"do"	{
-	cout << "Do found" << endl;
-	tmap["do"]++;
-	}
-"else"	{
-	cout << "Else found" << endl;
-	tmap["else"]++;
-	}
-"elsif"	{
-	cout << "Elsif found" << endl;
-	tmap["elsif"]++;
-	}
-"end"	{
-	cout << "End found" << endl;
-	tmap["end"]++;
-	}
-"false"	{
-	cout << "False found" << endl;
-	tmap["false"]++;
-	}
-"for"	{
-	cout << "For found" << endl;
-	tmap["for"]++;
-	}
-"if"	{
-	cout << "If found" << endl;
-	tmap["if"]++;
-	}
-"in"	{
-	cout << "In found" << endl;
-	tmap["in"]++;
-	}
-"next"	{
-	cout << "Next found" << endl;
-	tmap["next"]++;
-	}
-"nil"	{
-	cout << "Nil found" << endl;
-	tmap["nil"]++;
-	}
-"redo"	{
-	cout << "Redo found" << endl;
-	tmap["redo"]++;
-	}
-"retry"	{
-	cout << "Retry found" << endl;
-	tmap["retry"]++;
-	}
-"return"	{
-	cout << "Return found" << endl;
-	tmap["return"]++;
-	}
-"require"	{
-	cout << "Require found" << endl;
-	tmap["require"]++;
-	}
-"then"	{
-	cout << "Then found" << endl;
-	tmap["then"]++;
-	}
-"true"	{
-	cout << "True found" << endl;
-	tmap["true"]++;
-	}
-"undef"	{
-	cout << "Undef found" << endl;
-	tmap["undef"]++;
-	}
-"unless"	{
-	cout << "Unless found" << endl;
-	tmap["unless"]++;
-	}
-"until"	{
-	cout << "until found" << endl;
-	tmap["until"]++;
-	}
-"when"	{
-	cout << "When found" << endl;
-	tmap["When"]++;
-	}
-"while"	{
-	cout << "While found" << endl;
-	tmap["while"]++;
-	}
+"alias"		{ return(ALIAS); }
+"break"		{ return(BREAK); }
+"case"		{ return(CASE); }
+def"		{ return(DEF); }
+"defined?"	{ return(DEFINED); }
+"else"		{ return(ELSE); }
+"elsif"		{ return(ELSIF); }
+"end"		{ return(END); }
+"false"		{ return(FALSE); }
+"if"		{ return(IF); }
+"nil"		{ return(NIL); }
+"retry"		{ return(RETRY); }
+"return"	{ return(RETURN); }
+"require"	{ return(REQUIRE); }
+"then"		{ return(THEN); }
+"true"		{ return(TRUE); }
+"undef"		{ return(UNDEF); }
+"unless"	{ return(UNLESS); }
+"when"		{ return(WHEN); }
+"while"		{ return(WHILE); }
 	
 	
-"+"	{
-	cout << "'+' found" << endl;
-	tmap["+"]++;
-	}
-"-"	{
-	cout << "'-' found" << endl;
-	tmap["-"]++;
-	}
-"*"	{
-	cout << "'*' found" << endl;
-	tmap["*"]++;
-	}
-"/"	{
-	cout << "'/' found" << endl;
-	tmap["/"]++;
-	}
-"%"	{
-	cout << "'%' found" << endl;
-	tmap["%"]++;
-	}
-"**"	{
-	cout << "'**' found" << endl;
-	tmap["**"]++;
-	}
+"+"			{ return(PLUS); }
+"-"			{ return(MINUS); }
+"*"			{ return(MUL); }
+"/"			{ return(DIV); }
+"%"			{ return(MOD); }
+"**"		{ return(EXP); }
 
-"=="	{
-	cout << "'==' found" << endl;
-	tmap["=="]++;
-	}
-"!="	{
-	cout << "'!=' found" << endl;
-	tmap["!="]++;
-	}
-">"	{
-	cout << "'>' found" << endl;
-	tmap[">"]++;
-	}
-"<"	{
-	cout << "'<' found" << endl;
-	tmap["<"]++;
-	}
-"<="	{
-	cout << "'<=' found" << endl;
-	tmap["<="]++;
-	}
-">="	{
-	cout << "'>=' found" << endl;
-	tmap[">="]++;
-	}
+"=="		{ return(EQUAL); }
+"!="		{ return(NOT_EQUAL); } 
+">"			{ return(GREATER); }
+"<"			{ return(LESS); }
+"<="		{ return(LESS_EQUAL); }
+">="		{ return(GREATER_EQUAL); }
 
-"="	{
-	cout << "'=' found" << endl;
-	tmap["="]++;
-	}
-"+="	{
-	cout << "'+=' found" << endl;
-	tmap["+="]++;
-	}
-"-="	{
-	cout << "'-=' found" << endl;
-	tmap["-="]++;
-	}
-"*="	{
-	cout << "'*=' found" << endl;
-	tmap["*="]++;
-	}
-"/="	{
-	cout << "'/=' found" << endl;
-	tmap["/="]++;
-	}
-"%="	{
-	cout << "'%=' found" << endl;
-	tmap["%="]++;
-	}
-"**="	{
-	cout << "'**=' found" << endl;
-	tmap["**="]++;
-	}
+"="			{ return(ASSIGN); }
+"+="		{ return(PLUS_ASSIGN); }
+"-="		{ return(MINUS_ASSIGN); }
+"*="		{ return(MUL_ASSIGN); }
+"/="		{ return(DIV_ASSIGN); }
+"%="		{ return(MOD_ASSIGN); }
+"**="		{ return(EXP_ASSIGN); }
 
-"&"	{
-	cout << "'&' found" << endl;
-	tmap["&"]++;
-	}
-"|"	{
-	cout << "'|' found" << endl;
-	tmap["|"]++;
-	}
-"^"	{
-	cout << "'^' found" << endl;
-	tmap["^"]++;
-	}
-"~"	{
-	cout << "'~' found" << endl;
-	tmap["~"]++;
-	}
-"<<"	{
-	cout << "'<<' found" << endl;
-	tmap["<<"]++;
-	}
-">>"	{
-	cout << "'>>' found" << endl;
-	tmap[">>"]++;
-	}
+"&"			{ return(BIT_AND); }			
+"|"			{ return(BIT_OR); }
+"^"			{ return(BIT_XOR); }
+"~"			{ return(BIT_NOT); }
+"<<"		{ return(BIT_SHL); }
+">>"		{ return(BIT_SHR); }
 
-"and"	{
-	cout << "And found" << endl;
-	tmap["and"]++;
-	}
-"or"	{
-	cout << "Or found" << endl;
-	tmap["or"]++;
-	}
-"not"	{
-	cout << "NOT found" << endl;
-	tmap["not"]++;
-	}
-"&&"	{
-	cout << "'&&' found" << endl;
-	tmap["&&"]++;
-	}
-"||"	{
-	cout << "'||' found" << endl;
-	tmap["||"]++;
-	}
-"!"	{
-	cout << "'!' found" << endl;
-	tmap["!"]++;
-	}
+"and"		{ return(AND); }
+"or"		{ return(OR); }
+"not"		{ return(NOT); }
+"&&"		{ return(AND); }
+"||"		{ return(OR); }
+"!"			{ return(NOT); }
 
-"?"	{
-	cout << "'?:' found" << endl;
-	tmap["?"]++;
-	}
-":"	{
-	cout << "':' found" << endl;
-	tmap[":"]++;
-	}
+"?"			{ return(ASSIGN); }
+":"			{ return(ASSIGN); }
 
 
-"#".*\n {
-    cout << "Single-line comment found" << endl;
-    tmap["single-line comment"]++;
-    }
-"=begin"[\w\n][.\n]*\n[\w\n]"=end"    {
-    cout << "Multi-line comment found" << endl;
-    tmap["mingle-line comment"]++;
-    }
+"#".*\n 	{/* skip oneline */} 							// oneline comment
+"=begin"[\w\n][.\n]*\n[\w\n]"=end"	{/* skip multiline */}	// multiline comment
 
-"("	{
-	cout << "'(' found" << endl;
-	tmap["("]++;
-	}
-")"	{
-	cout << "')' found" << endl;
-	tmap[")"]++;
-	}
-"["	{
-	cout << "'[' found" << endl;
-	tmap["["]++;
-	}
-"]"	{
-	cout << "']' found" << endl;
-	tmap["]"]++;
-	}
-"{"	{
-	cout << "'{' found" << endl;
-	tmap["{"]++;
-	}
-"}"	{
-	cout << "'}' found" << endl;
-	tmap["}"]++;
-	}
+"("			{ return(LEFT_RBRACKET); }
+")"			{ return(RIGHT_RBRACKET); }
+"["			{ return(LEFT_SBRACKET); }
+"]"			{ return(RIGHT_SBRACKET); }
 
-","	{
-	cout << "',' found" << endl;
-	tmap[","]++;
-	}
+","			{ return(COMMA); }
 
-"$"{ID}	{
-	cout << "global identifier found: "<< yytext << endl;
-	tmap["global identifier"]++;
-	}
+"$"{ID}		{ return(ID_GLOBAL); }
 	
-";"	{
-	cout << "semicolon found" << endl;
-	tmap["semicolon"]++;
-	}
+";"			{ return(SEMICOLON); }
 
 \"(\\.|[^\\"])*\" |
-\'(\\.|[^\\'])*\'  {
-    cout << "string found :" << yytext << endl;
-    tmap["string"]++;
-    }
+\'(\\.|[^\\'])*\'   { return(LITERAL); }
 
-{ID}[!?]	{
-	cout << "Method name found: "<< yytext << endl;
-	tmap["method"]++;
-	}
+{ID}[!?]	{ return(ID_FUNCTION); }
 
-{ID}		{
-	cout << "Identificator found: " << yytext << endl;
-	tmap["id"]++;
-	}
-{FLOAT}	    {
-    cout << "Float number found: " << yytext << endl;
-    tmap["float"]++;
-    }
-{INT}		{
-    cout << "Integer number found: " << yytext << endl;
-    tmap["int"]++;
-    }
+{ID}		{ return(ID); }
+{FLOAT}		{ return(NUM_FLOAT); }
+{INT}		{ return(NUM_INTEGER); }
 
-\n		{
-	cout << "Line break found" << endl;
-	tmap["br"]++;
-	}
+\n 			{ return(CRLF); }
 
 [ \t\n\r] { /* skip whitespace */ }
 
