@@ -1,7 +1,7 @@
 LANG_NAME='ruby'
 FILE_BISON='$(LANG_NAME).y'
 FILE_BISON_LOG='$(LANG_NAME).bison.log'
-FILE_BISON_OUTPUT='$(LANG_NAME).output'
+FILE_BISON_OUTPUT='$(LANG_NAME).output.cpp'
 FILE_BISON_DEFINES='$(LANG_NAME).bison.defines.h'
 BISON='bison'
 RUN_BISON='$(BISON) --report-file=$(FILE_BISON_LOG) -v --graph=$(FILE_BISON_GRAPH)'

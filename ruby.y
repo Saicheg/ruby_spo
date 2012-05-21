@@ -2,14 +2,14 @@
 %token IF THEN ELSE ELSIF UNLESS
 %token DEF END UNDEF ALIAS RETURN
 %token TRUE FALSE NIL
-%token WHILE FOR BREAK UNTIL RETRY REDO NEXT IN
+%token WHILE BREAK RETRY
+//%token FOR UNTIL IN NEXT REDO
 %token CASE WHEN
 %token REQUIRE
 
 // commentaries
 %token C_BEGIN C_END
 
-%token TERNARY_THEN TERNARY_ELSE
 %token LEFT_RBRACKET RIGHT_RBRACKET
 %token LEFT_FBRACKET RIGHT_FBRACKET
 %token LEFT_SBRACKET RIGHT_SBRACKET
@@ -30,10 +30,9 @@
 %left PLUS MINUS 								   /* + - */
 %left MUL DIV MOD 								   /* / * % */
 %left EXP 									   /* ** */
+%left TERNARY_THEN TERNARY_ELSE
 %right ASSIGN PLUS_ASSIGN MINUS_ASSIGN MUL_ASSIGN DIV_ASSIGN MOD_ASSIGN EXP_ASSIGN /* = += -+ *= /= %= **=  */
 %right NOT BIT_NOT 								   /* ! ~ */
-
-%token ASS
 
 %start program
 
@@ -46,43 +45,38 @@ program	: /* empty */
 /* expression - any code block */
 expression_list	: expression terminator
 						| expression_list expression terminator
-//						| expression_list
 						;
 
 expression	: function_definition
+            | undef_statement
 				| require_block
-				| calculable
 				| if_statement
-//				| line_skip
+				| unless_statement
+				| case_statement
+				| alias_statement
+				| rvalue
+				| return_statement
+				| while_statement
 				;
 
 require_block	: REQUIRE LITERAL
 					;
 
-/* calculable - code block, which returns a value */
-calculable_list	: calculable terminator
-						| calculable_list calculable terminator
-						;
-
-calculable	: assignment
-				| rvalue
-				;
 
 function_definition	: function_definition_header function_definition_body END
 							;
 
 function_definition_body	: /* empty */
-									| calculable_list
-									| calculable_list function_return
+									| expression_list
 									;
 
 function_definition_header	: DEF function_name CRLF
 									| DEF function_name function_definition_params CRLF
 									;
 
-function_name	: ID_FUNCTION
-									| ID
-									;
+function_name : ID_FUNCTION
+              | ID
+              ;
 
 function_definition_params	: LEFT_RBRACKET function_definition_params_list RIGHT_RBRACKET
 									;
@@ -92,7 +86,7 @@ function_definition_params_list	: ID
 											;
 
 
-function_return	: RETURN calculable
+return_statement	: RETURN rvalue
 						;
 
 function_call	: function_name LEFT_RBRACKET function_call_param_list RIGHT_RBRACKET
@@ -105,11 +99,45 @@ function_call_param_list	: /* empty */
 function_call_params	: rvalue
 							| function_call_params COMMA rvalue
 							;
+							
+undef_statement : UNDEF ID
+                ;
+                
+alias_statement : ALIAS LITERAL LITERAL
+                ;                
 
-if_statement	: IF LEFT_RBRACKET rvalue RIGHT_RBRACKET expression_list ELSE expression_list END
-					| IF LEFT_RBRACKET rvalue RIGHT_RBRACKET expression_list END
+if_elsif_statement : ELSIF rvalue CRLF expression_list
+                    | ELSIF rvalue CRLF expression_list if_elsif_statement
+                    ;
+
+if_statement	: IF rvalue CRLF expression_list ELSE CRLF expression_list END
+					| IF rvalue THEN expression_list ELSE expression_list END
+					| IF rvalue CRLF expression_list if_elsif_statement END
 					;
+					
+unless_statement : UNLESS rvalue CRLF expression_list END
+                 ;
 
+while_statement : WHILE rvalue CRLF while_expression_list END
+                ;
+
+while_expression_list : expression terminator
+                      | RETRY terminator
+                      | BREAK terminator
+                      | while_expression_list expression terminator
+                      | while_expression_list RETRY terminator
+                      | while_expression_list BREAK terminator
+                      ;
+case_statement : CASE rvalue CRLF case_expression_list END
+               | CASE rvalue CRLF case_expression_list ELSE expression_list END
+               ;
+               
+case_expression_list : WHEN rvalue CRLF expression_list
+                     | case_expression_list WHEN rvalue CRLF expression_list
+                     ;
+                     
+ternary_statement : rvalue TERNARY_THEN rvalue TERNARY_ELSE rvalue
+                  ; 
 
 assignment	: lvalue ASSIGN rvalue
 				| lvalue PLUS_ASSIGN rvalue
@@ -139,12 +167,17 @@ lvalue	: ID
 
 rvalue	: lvalue
 			| LEFT_RBRACKET rvalue RIGHT_RBRACKET
+			| assignment
 			| array_definition
+         | ternary_statement
 			| function_call
 			| CHAR
 			| LITERAL
 			| NUM_FLOAT
 			| NUM_INTEGER
+			| TRUE
+			| FALSE
+			| NIL
 			| DEFINED defined_param
 			| NOT rvalue
 			| BIT_NOT rvalue
