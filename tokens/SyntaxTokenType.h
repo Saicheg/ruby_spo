@@ -1,16 +1,14 @@
-#include <string>
-using namespace std;
+#ifndef SYNTAX_TOKEN_TYPE_H
+#define SYNTAX_TOKEN_TYPE_H
 
 enum SyntaxTokenType
 {
-	EmptyToken,
-	BooleanToken,
 	NilToken,
-	
 	IntegerToken,
 	FloatToken,
 	LiteralToken,
-	CharToken,
+	BooleanToken,
+
 	IdentifierToken,
 
 	ExpressionList,
@@ -23,16 +21,16 @@ enum SyntaxTokenType
 	
 	IfToken,
 	UndefToken,
-	RequireToken
+	RequireToken,
 	
 	CaseToken,
 	CasesListToken,
 	CasesDefaultCaseToken,
 	
 	AliasToken,
-	ReturnToken
+	ReturnToken,
 	WhileToken,
-	UnlessToken
+	UnlessToken,
 	
 	Assignment,
 	ArrayDefinition,
@@ -42,12 +40,4 @@ enum SyntaxTokenType
 	OperationTypeToken
 };
 
-class SyntaxToken
-{
-public:
-	SyntaxToken(SyntaxTokenType type);
-	vector<SyntaxToken> NestedTokens;
-	string StringValue;
-	int IntegerValue;
-	double DoubleValue;
-};
+#endif
