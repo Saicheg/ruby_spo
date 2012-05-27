@@ -1,12 +1,13 @@
 %filenames Parser
 %scanner Scanner.h
 
+%stype class Token*
+
 // keywords
 %token IF THEN ELSE ELSIF UNLESS
 %token DEF END UNDEF ALIAS RETURN
 %token TRUE FALSE NIL
 %token WHILE BREAK RETRY
-//%token FOR UNTIL IN NEXT REDO
 %token CASE WHEN
 %token REQUIRE
 
@@ -59,7 +60,7 @@ expression	: function_definition
 				| while_statement
 				;
 
-require_block	: REQUIRE LITERAL
+require_block	: REQUIRE LITERAL { cout << $1 << " " << $2 << " " << endl;}
 					;
 
 
@@ -169,7 +170,7 @@ rvalue	: lvalue
 			| LEFT_RBRACKET rvalue RIGHT_RBRACKET
 			| assignment
 			| array_definition
-         | ternary_statement
+         	| ternary_statement
 			| function_call
 			| CHAR
 			| LITERAL
@@ -202,7 +203,7 @@ rvalue	: lvalue
 			| rvalue EXP rvalue
 			;
 
-defined_param	: ID
+defined_param	: ID 
 					| ID_GLOBAL
 					| ID_FUNCTION
 					| LEFT_RBRACKET defined_param RIGHT_RBRACKET

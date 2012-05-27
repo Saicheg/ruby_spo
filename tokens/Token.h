@@ -6,7 +6,6 @@
 using namespace std;
 
 #include "SyntaxTokenType.h"
-#include "../Parser.h"
 
 class Token
 {

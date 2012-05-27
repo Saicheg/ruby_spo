@@ -1,4 +1,4 @@
-%print-tokens
+//%print-tokens
 
 DIGIT		[0-9]
 INT			-?[0-9]+
@@ -21,7 +21,7 @@ ID			[a-zA-Z_][a-zA-Z0-9_]*
 "false"		{ return(Parser::FALSE); }
 "if"		{ return(Parser::IF); }
 "nil"		{ return(Parser::NIL); }
-"retry"		{ return(Parser::Parser::RETRY); }
+"retry"		{ return(Parser::RETRY); }
 "return"	{ return(Parser::RETURN); }
 "require"	{ return(Parser::REQUIRE); }
 "then"		{ return(Parser::THEN); }
