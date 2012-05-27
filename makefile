@@ -39,6 +39,6 @@ run: compile
 
 clean:
 	rm -f *.o
-	rm -f Scanner.h Parserbase.h Scannerbase.h Parser.ih
+	rm -f Scanner.h Parserbase.h Scannerbase.h
 	rm -f lex.cc parse.cc
 	rm -f $(FILE_OUTPUT)
