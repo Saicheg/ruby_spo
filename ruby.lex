@@ -1,18 +1,3 @@
-/*
-%{
-    #define _SKIP_YYFLEXLEXER_
-    #include "scanner.ih"
-
-    
-	include <fstream>
-	#include <map>
-	#include <string>
-	using namespace std;
-
-	std::map<string,int> tmap;
-	std::map<string,int>::iterator it;
-%}
-*/
 %print-tokens
 
 DIGIT		[0-9]
@@ -22,6 +7,8 @@ ID			[a-zA-Z_][a-zA-Z0-9_]*
 
 %%
 
+"#".*\n 	{/* skip oneline */} 							// oneline comment
+^"=begin"[\w\n][.\n]*[\w\n]"=end"$	{/* skip multiline */}	// multiline comment
 
 "alias"		{ return(Parser::ALIAS); }
 "break"		{ return(Parser::BREAK); }
@@ -83,10 +70,6 @@ ID			[a-zA-Z_][a-zA-Z0-9_]*
 
 "?"			{ return(Parser::ASSIGN); }
 ":"			{ return(Parser::ASSIGN); }
-
-
-"#".*\n 	{/* skip oneline */} 							// oneline comment
-"=begin"[\w\n][.\n]*\n[\w\n]"=end"	{/* skip multiline */}	// multiline comment
 
 "("			{ return(Parser::LEFT_RBRACKET); }
 ")"			{ return(Parser::RIGHT_RBRACKET); }

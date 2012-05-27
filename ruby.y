@@ -37,8 +37,8 @@
 
 %%
 
-program	: /* empty */	{printf("start\n");}
-			| expression_list {printf("start exp\n");}
+program	: /* empty */
+			| expression_list
 			;
 
 /* expression - any code block */

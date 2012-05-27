@@ -1,8 +1,4 @@
-=begin
-
-This is a test program.
-
-=end
+5
 
 require 'test'
 
@@ -12,7 +8,7 @@ def greater?(a,b)
 end
 
 def biggest(a,b)
-  greater?(a,b) ? a : b
+  (greater?(a,b)) ? a : b
 end
 
 def pi
@@ -33,7 +29,9 @@ a = 5
 b = 6
 c = a + b
 
-c -= 1 while (greater?(a,c))
+while (greater?(a,c))
+  c -= 1
+end
 
 if (c > pi())
   c = a || b
