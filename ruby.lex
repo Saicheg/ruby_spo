@@ -1,16 +1,19 @@
-%option noyywrap
-%option c++
+/*
 %{
-#include <fstream>
-#include <map>
-#include <string>
-#include "ruby.bison.defines.h"
-using namespace std;
+    #define _SKIP_YYFLEXLEXER_
+    #include "scanner.ih"
 
-map<string,int> tmap;
-map<string,int>::iterator it;
+    
+	include <fstream>
+	#include <map>
+	#include <string>
+	using namespace std;
 
+	std::map<string,int> tmap;
+	std::map<string,int>::iterator it;
 %}
+*/
+%print-tokens
 
 DIGIT		[0-9]
 INT			-?[0-9]+
@@ -20,122 +23,93 @@ ID			[a-zA-Z_][a-zA-Z0-9_]*
 %%
 
 
-"alias"		{ return(ALIAS); }
-"break"		{ return(BREAK); }
-"case"		{ return(CASE); }
-def"		{ return(DEF); }
-"defined?"	{ return(DEFINED); }
-"else"		{ return(ELSE); }
-"elsif"		{ return(ELSIF); }
-"end"		{ return(END); }
-"false"		{ return(FALSE); }
-"if"		{ return(IF); }
-"nil"		{ return(NIL); }
-"retry"		{ return(RETRY); }
-"return"	{ return(RETURN); }
-"require"	{ return(REQUIRE); }
-"then"		{ return(THEN); }
-"true"		{ return(TRUE); }
-"undef"		{ return(UNDEF); }
-"unless"	{ return(UNLESS); }
-"when"		{ return(WHEN); }
-"while"		{ return(WHILE); }
+"alias"		{ return(Parser::ALIAS); }
+"break"		{ return(Parser::BREAK); }
+"case"		{ return(Parser::CASE); }
+"def"		{ return(Parser::DEF); }
+"defined?"	{ return(Parser::DEFINED); }
+"else"		{ return(Parser::ELSE); }
+"elsif"		{ return(Parser::ELSIF); }
+"end"		{ return(Parser::END); }
+"false"		{ return(Parser::FALSE); }
+"if"		{ return(Parser::IF); }
+"nil"		{ return(Parser::NIL); }
+"retry"		{ return(Parser::Parser::RETRY); }
+"return"	{ return(Parser::RETURN); }
+"require"	{ return(Parser::REQUIRE); }
+"then"		{ return(Parser::THEN); }
+"true"		{ return(Parser::TRUE); }
+"undef"		{ return(Parser::UNDEF); }
+"unless"	{ return(Parser::UNLESS); }
+"when"		{ return(Parser::WHEN); }
+"while"		{ return(Parser::WHILE); }
 	
 	
-"+"			{ return(PLUS); }
-"-"			{ return(MINUS); }
-"*"			{ return(MUL); }
-"/"			{ return(DIV); }
-"%"			{ return(MOD); }
-"**"		{ return(EXP); }
+"+"			{ return(Parser::PLUS); }
+"-"			{ return(Parser::MINUS); }
+"*"			{ return(Parser::MUL); }
+"/"			{ return(Parser::DIV); }
+"%"			{ return(Parser::MOD); }
+"**"		{ return(Parser::EXP); }
 
-"=="		{ return(EQUAL); }
-"!="		{ return(NOT_EQUAL); } 
-">"			{ return(GREATER); }
-"<"			{ return(LESS); }
-"<="		{ return(LESS_EQUAL); }
-">="		{ return(GREATER_EQUAL); }
+"=="		{ return(Parser::EQUAL); }
+"!="		{ return(Parser::NOT_EQUAL); } 
+">"			{ return(Parser::GREATER); }
+"<"			{ return(Parser::LESS); }
+"<="		{ return(Parser::LESS_EQUAL); }
+">="		{ return(Parser::GREATER_EQUAL); }
 
-"="			{ return(ASSIGN); }
-"+="		{ return(PLUS_ASSIGN); }
-"-="		{ return(MINUS_ASSIGN); }
-"*="		{ return(MUL_ASSIGN); }
-"/="		{ return(DIV_ASSIGN); }
-"%="		{ return(MOD_ASSIGN); }
-"**="		{ return(EXP_ASSIGN); }
+"="			{ return(Parser::ASSIGN); }
+"+="		{ return(Parser::PLUS_ASSIGN); }
+"-="		{ return(Parser::MINUS_ASSIGN); }
+"*="		{ return(Parser::MUL_ASSIGN); }
+"/="		{ return(Parser::DIV_ASSIGN); }
+"%="		{ return(Parser::MOD_ASSIGN); }
+"**="		{ return(Parser::EXP_ASSIGN); }
 
-"&"			{ return(BIT_AND); }			
-"|"			{ return(BIT_OR); }
-"^"			{ return(BIT_XOR); }
-"~"			{ return(BIT_NOT); }
-"<<"		{ return(BIT_SHL); }
-">>"		{ return(BIT_SHR); }
+"&"			{ return(Parser::BIT_AND); }			
+"|"			{ return(Parser::BIT_OR); }
+"^"			{ return(Parser::BIT_XOR); }
+"~"			{ return(Parser::BIT_NOT); }
+"<<"		{ return(Parser::BIT_SHL); }
+">>"		{ return(Parser::BIT_SHR); }
 
-"and"		{ return(AND); }
-"or"		{ return(OR); }
-"not"		{ return(NOT); }
-"&&"		{ return(AND); }
-"||"		{ return(OR); }
-"!"			{ return(NOT); }
+"and"		{ return(Parser::AND); }
+"or"		{ return(Parser::OR); }
+"not"		{ return(Parser::NOT); }
+"&&"		{ return(Parser::AND); }
+"||"		{ return(Parser::OR); }
+"!"			{ return(Parser::NOT); }
 
-"?"			{ return(ASSIGN); }
-":"			{ return(ASSIGN); }
+"?"			{ return(Parser::ASSIGN); }
+":"			{ return(Parser::ASSIGN); }
 
 
 "#".*\n 	{/* skip oneline */} 							// oneline comment
 "=begin"[\w\n][.\n]*\n[\w\n]"=end"	{/* skip multiline */}	// multiline comment
 
-"("			{ return(LEFT_RBRACKET); }
-")"			{ return(RIGHT_RBRACKET); }
-"["			{ return(LEFT_SBRACKET); }
-"]"			{ return(RIGHT_SBRACKET); }
+"("			{ return(Parser::LEFT_RBRACKET); }
+")"			{ return(Parser::RIGHT_RBRACKET); }
+"["			{ return(Parser::LEFT_SBRACKET); }
+"]"			{ return(Parser::RIGHT_SBRACKET); }
 
-","			{ return(COMMA); }
+","			{ return(Parser::COMMA); }
 
-"$"{ID}		{ return(ID_GLOBAL); }
+"$"{ID}		{ return(Parser::ID_GLOBAL); }
 	
-";"			{ return(SEMICOLON); }
+";"			{ return(Parser::SEMICOLON); }
 
 \"(\\.|[^\\"])*\" |
-\'(\\.|[^\\'])*\'   { return(LITERAL); }
+\'(\\.|[^\\'])*\'   { return(Parser::LITERAL); }
 
-{ID}[!?]	{ return(ID_FUNCTION); }
+{ID}[!?]	{ return(Parser::ID_FUNCTION); }
 
-{ID}		{ return(ID); }
-{FLOAT}		{ return(NUM_FLOAT); }
-{INT}		{ return(NUM_INTEGER); }
+{ID}		{ return(Parser::ID); }
+{FLOAT}		{ return(Parser::NUM_FLOAT); }
+{INT}		{ return(Parser::NUM_INTEGER); }
 
-\n 			{ return(CRLF); }
+\n 			{ return(Parser::CRLF); }
 
 [ \t\n\r] { /* skip whitespace */ }
 
-%%
-
-int main(int argc, char* argv[])
-{
-	ifstream LexerFIn;
-	if (argc > 1)
-	{
-		LexerFIn.open(argv[1]);
-		if (LexerFIn.fail())
-		{
-			cerr << "Input file cannot be opened\n";
-			return 0;
-		}
-	}
-	else
-	{
-		cerr << "Input file not specified\n";
-		return 0;
-	}
-	yyFlexLexer Lexer(&LexerFIn);
-	Lexer.yylex();
-	
-	cout << endl << "Stats:" << endl;
-	for (it=tmap.begin();it!=tmap.end();it++)
-	{
-		cout << (*it).first << " => " << (*it).second << endl;
-	}
-	return 0;
-}
-
+%% 

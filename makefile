@@ -1,17 +1,44 @@
 LANG_NAME='ruby'
+
+FILE_LEX='$(LANG_NAME).lex'
+FILE_LEX_HEADER='Scanner.h'
+FILE_LEX_OUTPUT='lex.cc'
+FILE_LEX_OBJECT='Scanner.o'
+FLEX='flexc++'
+
 FILE_BISON='$(LANG_NAME).y'
-FILE_BISON_LOG='$(LANG_NAME).bison.log'
-FILE_BISON_OUTPUT='$(LANG_NAME).output.cpp'
-FILE_BISON_DEFINES='$(LANG_NAME).bison.defines.h'
-BISON='bison'
-RUN_BISON='$(BISON) --report-file=$(FILE_BISON_LOG) -v --graph=$(FILE_BISON_GRAPH)'
+FILE_BISON_OUTPUT='parse.cc'
+FILE_BISON_OBJECT='parse.o'
+BISON='bisonc++'
 
-default: $(FILE_BISON)
+FILE_MAIN='main.cc'
+FILE_MAIN_OBJECT='main.o'
+
+FILE_OUTPUT='$(LANG_NAME).run'
+FILE_TEST='test.rb'
+
+LIB_BOBCAT='/usr/lib/libbobcat.so.2'
+
+default: compile
   
-
 $(FILE_BISON):
-	$(BISON) --report-file=$(FILE_BISON_LOG) -v --defines=$(FILE_BISON_DEFINES) --output=$(FILE_BISON_OUTPUT) $(FILE_BISON)
+	$(BISON) $(FILE_BISON)
+
+$(FILE_LEX):
+	$(FLEX) $(FILE_LEX)
+
+compile: clean $(FILE_BISON) $(FILE_LEX)
+	g++ --std=c++0x -c -o $(FILE_LEX_OBJECT) $(FILE_LEX_OUTPUT)	 	
+	g++ --std=c++0x -c -o $(FILE_BISON_OBJECT) $(FILE_BISON_OUTPUT)
+	g++ --std=c++0x -c -o $(FILE_MAIN_OBJECT) $(FILE_MAIN)
+	g++ --std=c++0x -o $(FILE_OUTPUT) $(FILE_BISON_OBJECT) $(FILE_LEX_OBJECT) $(FILE_MAIN) $(LIB_BOBCAT)
+	chmod +x $(FILE_OUTPUT)	
+
+run: compile
+	cat $(FILE_TEST) | ./$(FILE_OUTPUT) 
 
 clean:
-	rm -f $(FILE_BISON_LOG) $(FILE_BISON_OUTPUT) $(FILE_BISON_DEFINES)
-
+	rm -f *.o
+	rm -f Scanner.h Parserbase.h Scannerbase.h Parser.ih
+	rm -f lex.cc parse.cc
+	rm -f $(FILE_OUTPUT)
