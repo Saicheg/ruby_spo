@@ -10,7 +10,7 @@ using namespace std;
 class Token
 {
 public:
-	Token(SyntaxTokenType type);
+	Token(SyntaxTokenType type = SyntaxTokenType::NilToken);
 	virtual ~Token(){};
 	virtual SyntaxTokenType GetType();
 	virtual void SetType(SyntaxTokenType type);

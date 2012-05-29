@@ -9,9 +9,9 @@ using namespace std;
 class StringToken: public Token
 {
 public:
-	StringToken(string value);
+	StringToken(const string& value);
 	string GetValue();
-	void SetValue(string& value);
+	void SetValue(const string& value);
 protected:
 	string str;
 };

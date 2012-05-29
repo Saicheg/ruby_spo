@@ -173,7 +173,7 @@ rvalue	: lvalue
          	| ternary_statement
 			| function_call
 			| CHAR
-			| LITERAL
+			| LITERAL {$$ = new StringToken(d_scanner.matched());}
 			| NUM_FLOAT
 			| NUM_INTEGER
 			| TRUE

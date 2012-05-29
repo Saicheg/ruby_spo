@@ -3,7 +3,7 @@
 BooleanToken::BooleanToken(bool value)
 {
 	this->value = value;
-	this->type = BooleanToken;
+	this->type = SyntaxTokenType::BooleanToken;
 }
 
 bool BooleanToken::GetValue()

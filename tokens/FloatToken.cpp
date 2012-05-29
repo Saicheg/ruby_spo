@@ -3,10 +3,10 @@
 FloatToken::FloatToken(double value /* = 0.0*/)
 {
 	this->value = value;
-	this->type = FloatToken;
+	this->type = SyntaxTokenType::FloatToken;
 }
 
-double GetValue()
+double FloatToken::GetValue()
 {
 	return this->value;
 }

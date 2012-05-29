@@ -2,5 +2,5 @@
 
 NilToken::NilToken()
 {
-	this->type = NilToken;
+	this->type = SyntaxTokenType::NilToken;
 }

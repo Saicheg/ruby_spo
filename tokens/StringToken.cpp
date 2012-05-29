@@ -1,9 +1,9 @@
 #include "StringToken.h"
 
-StringToken::StringToken(string value)
+StringToken::StringToken(const string& value)
 {
 	this->str = value;
-	this->type = LiteralToken;
+	this->type = SyntaxTokenType::LiteralToken;
 }
 
 string StringToken::GetValue()
@@ -11,7 +11,7 @@ string StringToken::GetValue()
 	return this->str;
 }
 
-void StringToken::SetValue(string value)
+void StringToken::SetValue(const string& value)
 {
 	this->str = value;
 }

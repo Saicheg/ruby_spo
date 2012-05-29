@@ -3,7 +3,7 @@
 
 #include "Token.h"
 
-class NilToken
+class NilToken: public Token
 {
 public:
 	NilToken();

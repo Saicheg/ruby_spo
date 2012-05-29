@@ -3,7 +3,7 @@
 IntegerToken::IntegerToken(long int value)
 {
 	this->value = value;
-	this->type = IntegerToken;
+	this->type = SyntaxTokenType::IntegerToken;
 }
 
 long int IntegerToken::GetValue()
@@ -11,7 +11,7 @@ long int IntegerToken::GetValue()
 	return this->value;
 }
 
-void SetValue(long int value)
+void IntegerToken::SetValue(long int value)
 {
 	this->value = value;
 }
