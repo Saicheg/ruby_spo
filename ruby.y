@@ -60,7 +60,7 @@ expression	: function_definition
 				| while_statement
 				;
 
-require_block	: REQUIRE LITERAL { cout << $1 << " " << $2 << " " << endl;}
+require_block	: REQUIRE LITERAL
 					;
 
 

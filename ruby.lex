@@ -68,8 +68,8 @@ ID			[a-zA-Z_][a-zA-Z0-9_]*
 "||"		{ return(Parser::OR); }
 "!"			{ return(Parser::NOT); }
 
-"?"			{ return(Parser::ASSIGN); }
-":"			{ return(Parser::ASSIGN); }
+"?"			{ return(Parser::TERNARY_THEN); }
+":"			{ return(Parser::TERNARY_ELSE); }
 
 "("			{ return(Parser::LEFT_RBRACKET); }
 ")"			{ return(Parser::RIGHT_RBRACKET); }
