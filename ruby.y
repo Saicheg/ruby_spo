@@ -1,7 +1,7 @@
 %filenames Parser
 %scanner Scanner.h
 
-%stype class Token*
+%stype class SyntaxToken*
 
 // keywords
 %token IF THEN ELSE ELSIF UNLESS
@@ -173,9 +173,9 @@ rvalue	: lvalue
          	| ternary_statement
 			| function_call
 			| CHAR
-			| LITERAL {$$ = new StringToken(d_scanner.matched());}
-			| NUM_FLOAT
-			| NUM_INTEGER
+			| LITERAL { $$ = new StringSyntaxToken(d_scanner.matched()); }
+			| NUM_FLOAT { $$ = new FloatSyntaxToken(s2double(d_scanner.matched())); }
+			| NUM_INTEGER { $$ = new IntegerSyntaxToken(s2int(d_scanner.matched())); }
 			| TRUE
 			| FALSE
 			| NIL

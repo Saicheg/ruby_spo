@@ -3,11 +3,12 @@
 
 #include "tokens/SyntaxTokenType.h"
 
-#include "tokens/Token.h"
-#include "tokens/NilToken.h"
-#include "tokens/BooleanToken.h"
-#include "tokens/FloatToken.h"
-#include "tokens/IntegerToken.h"
-#include "tokens/StringToken.h"
+#include "tokens/SyntaxToken.h"
+
+#include "tokens/NilSyntaxToken.h"
+#include "tokens/BooleanSyntaxToken.h"
+#include "tokens/IntegerSyntaxToken.h"
+#include "tokens/FloatSyntaxToken.h"
+#include "tokens/StringSyntaxToken.h"
 
 #endif

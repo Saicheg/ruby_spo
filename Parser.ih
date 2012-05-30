@@ -5,6 +5,7 @@
 // $insert class.h
 #include "Parser.h"
 #include "Tokens.h"
+#include "utils.h"
 
     // Add below here any includes etc. that are only 
     // required for the compilation of Parser's sources.

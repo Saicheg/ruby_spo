@@ -1,5 +1,5 @@
-#ifndef TOKEN_H
-#define TOKEN_H
+#ifndef SYNTAX_TOKEN_H
+#define SYNTAX_TOKEN_H
 
 #include <string>
 #include <vector>
@@ -7,17 +7,17 @@ using namespace std;
 
 #include "SyntaxTokenType.h"
 
-class Token
+class SyntaxToken
 {
 public:
-	Token(SyntaxTokenType type = SyntaxTokenType::NilToken);
-	virtual ~Token(){};
+	SyntaxToken(SyntaxTokenType type = SyntaxTokenType::NilToken);
+	virtual ~SyntaxToken(){};
 	virtual SyntaxTokenType GetType();
 	virtual void SetType(SyntaxTokenType type);
-	vector<Token> Children();
+	vector<SyntaxToken> Children();
 protected:
 	SyntaxTokenType type;
-	vector<Token> children;
+	vector<SyntaxToken> children;
 };
 
 #endif

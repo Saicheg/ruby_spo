@@ -28,10 +28,10 @@ $(FILE_LEX):
 	$(FLEX) $(FILE_LEX)
 
 compile: clean $(FILE_BISON) $(FILE_LEX)
+	g++ --std=c++0x -c tokens/*Token.cpp
 	g++ --std=c++0x -c -o $(FILE_LEX_OBJECT) $(FILE_LEX_OUTPUT)	 	
 	g++ --std=c++0x -c -o $(FILE_BISON_OBJECT) $(FILE_BISON_OUTPUT)
 	g++ --std=c++0x -c -o $(FILE_MAIN_OBJECT) $(FILE_MAIN)
-	g++ --std=c++0x -c tokens/*Token.cpp
 	g++ --std=c++0x -o $(FILE_OUTPUT) $(FILE_BISON_OBJECT) $(FILE_LEX_OBJECT) $(FILE_MAIN) $(LIB_BOBCAT) *Token.o
 	chmod +x $(FILE_OUTPUT)	
 
