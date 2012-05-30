@@ -230,14 +230,47 @@ unless_statement : UNLESS rvalue CRLF expression_list END
                  ;
 
 while_statement : WHILE rvalue CRLF while_expression_list END
+                  {
+                    $$ = new SyntaxToken(SyntaxTokenType::WhileToken);
+                    $$->Children().push_back(*$2);
+                    $$->Children().push_back(*$4);
+                    delete $2;
+                    delete $4;
+                  }
                 ;
 
 while_expression_list : expression terminator
+                        {
+                          $$ = new SyntaxToken(SyntaxTokenType::WhileExpressionList);
+                          $$->Children().push_back(*$1);
+                          delete $1;
+                        }
                       | RETRY terminator
+                        {
+                          $$ = new SyntaxToken(SyntaxTokenType::WhileExpressionList);
+                          $$->Children().push_back(SyntaxToken(SyntaxTokenType::RetryToken));
+                        }
                       | BREAK terminator
+                        {
+                          $$ = new SyntaxToken(SyntaxTokenType::WhileExpressionList);
+                          $$->Children().push_back(SyntaxToken(SyntaxTokenType::BreakToken));
+                        }
                       | while_expression_list expression terminator
+                        {
+                          $1->Children().push_back(*$2);
+                          $$ = $1;
+                          delete $2;
+                        }
                       | while_expression_list RETRY terminator
+                        {
+                          $1->Children().push_back(SyntaxToken(SyntaxTokenType::RetryToken));
+                          $$ = $1;
+                        }
                       | while_expression_list BREAK terminator
+                        {
+                          $1->Children().push_back(SyntaxToken(SyntaxTokenType::BreakToken));
+                          $$ = $1;
+                        }
                       ;
 case_statement : CASE rvalue CRLF case_expression_list END
                  {

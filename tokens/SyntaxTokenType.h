@@ -34,8 +34,12 @@ enum SyntaxTokenType
 	
 	AliasToken,
 	ReturnToken,
-	WhileToken,
 	UnlessToken,
+	BreakToken,
+	RetryToken,
+
+	WhileToken,
+	WhileExpressionList,
 	
 	Assignment,
 	ArrayDefinition,
