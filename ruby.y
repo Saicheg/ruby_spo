@@ -61,7 +61,12 @@ expression : function_definition
             ;
 
 require_block : REQUIRE LITERAL
-               ;
+                {
+                  $$ = new SyntaxToken(SyntaxTokenType::RequireToken);
+                  $$->Children().push_back(*$2);
+                  delete $2;
+                }
+              ;
 
 
 function_definition : function_definition_header function_definition_body END
@@ -88,7 +93,12 @@ function_definition_params_list : ID
 
 
 return_statement : RETURN rvalue
-                  ;
+                   {
+                     $$ = new SyntaxToken(SyntaxTokenType::ReturnToken);
+                     $$->Children().push_back(*$2);
+                     delete $2;
+                   }
+                 ;
 
 function_call : function_name LEFT_RBRACKET function_call_param_list RIGHT_RBRACKET
                ;
@@ -102,9 +112,21 @@ function_call_params : rvalue
                      ;
                      
 undef_statement : UNDEF ID
+                  {
+                    $$ = new SyntaxToken(SyntaxTokenType::UndefToken);
+                    $$->Children().push_back(*$2);
+                    delete $2;
+                  }
                 ;
                 
 alias_statement : ALIAS LITERAL LITERAL
+                  {
+                    $$ = new SyntaxToken(SyntaxTokenType::AliasToken);
+                    $$->Children().push_back(*$2);
+                    $$->Children().push_back(*$3);
+                    delete $2;
+                    delete $3;
+                  }
                 ;                
 
 if_elsif_statement : ELSIF rvalue CRLF expression_list
@@ -195,11 +217,24 @@ assignment : lvalue ASSIGN rvalue
            ;
 
 array_definition : LEFT_SBRACKET array_definition_elements RIGHT_SBRACKET
-                  ;
+                   {
+                     $$ = $2;
+                   }
+                 ;
 
 array_definition_elements : rvalue
-                           | array_definition_elements COMMA rvalue
-                           ;
+                            {
+                              $$ = new SyntaxToken(SyntaxTokenType::ArrayDefinition);
+                              $$->Children().push_back(*$1);
+                              delete $1;
+                            }
+                          | array_definition_elements COMMA rvalue
+                            {
+                              $1->Children().push_back(*$3);
+                              $$ = $1;
+                              delete $3;
+                            }
+                          ;
 
 array_selector : ID LEFT_SBRACKET rvalue RIGHT_SBRACKET
                  {

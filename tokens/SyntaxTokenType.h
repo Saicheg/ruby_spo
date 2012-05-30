@@ -37,7 +37,6 @@ enum SyntaxTokenType
 	
 	Assignment,
 	ArrayDefinition,
-	ArrayDefinitionElements,
 	ArraySelector,
 	OperationToken,
 	OperationTypeToken
