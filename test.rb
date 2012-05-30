@@ -39,6 +39,8 @@ else
   c = !(a && b) || (a & b)
 end
 
+k = defined?(a)
+
 str1 = "i am a single quote string"
 str2 = "i am a double quotes string"
 str3 = 'i am strin with escaped things inside test \t\t \ntest'

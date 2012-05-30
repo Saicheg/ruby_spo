@@ -10,6 +10,8 @@ enum SyntaxTokenType
 	BooleanToken,
 
 	IdentifierToken,
+	GlobalIdentifierToken,
+	FunctionIdentifierToken,
 
 	ExpressionList,
 	
@@ -22,6 +24,7 @@ enum SyntaxTokenType
 	IfToken,
 	UndefToken,
 	RequireToken,
+	DefinedToken,
 	
 	CaseToken,
 	CasesListToken,
