@@ -24,12 +24,12 @@ long int s2int( const string& s)
 
 SyntaxToken* CreateOperationToken(string operationType, SyntaxToken* arg1, SyntaxToken* arg2)
 {
-    SyntaxToken* opType = new StringSyntaxToken(operationType);
-    opType->SetType(SyntaxTokenType::OperationTypeToken);
-    
     SyntaxToken* t = new SyntaxToken(SyntaxTokenType::OperationToken);
     
+    SyntaxToken* opType = new StringSyntaxToken(operationType);
+    opType->SetType(SyntaxTokenType::OperationTypeToken);
     t->Children().push_back(*opType);
+    delete opType;
 
     if(arg1 == NULL)
     {
@@ -41,14 +41,23 @@ SyntaxToken* CreateOperationToken(string operationType, SyntaxToken* arg1, Synta
     if(arg2 != NULL)
     {
     	t->Children().push_back(*arg2);
-	    delete arg2;
+    }
+    return t;
+}
+
+SyntaxToken* CreateAssignmentToken(SyntaxToken* arg1, SyntaxToken* arg2)
+{    
+    SyntaxToken* t = new SyntaxToken(SyntaxTokenType::Assignment);
+ 
+    if(arg1 == NULL || arg2 == NULL)
+    {
+        return NULL;    
     }
 
-    delete opType;
-    delete arg1;
+    t->Children().push_back(*arg1);
+    t->Children().push_back(*arg2);
 
     return t;
-
 }
 
 #endif

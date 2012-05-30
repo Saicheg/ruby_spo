@@ -141,13 +141,58 @@ ternary_statement : rvalue TERNARY_THEN rvalue TERNARY_ELSE rvalue
                   ; 
 
 assignment : lvalue ASSIGN rvalue
-            | lvalue PLUS_ASSIGN rvalue
-            | lvalue MINUS_ASSIGN rvalue
-            | lvalue MUL_ASSIGN rvalue
-            | lvalue DIV_ASSIGN rvalue
-            | lvalue MOD_ASSIGN rvalue
-            | lvalue EXP_ASSIGN rvalue
-            ;
+             {
+               $$ = CreateAssignmentToken($1, $3);
+             }
+           | lvalue PLUS_ASSIGN rvalue
+             {
+               auto oper = CreateOperationToken("PLUS", $1, $3);
+               $$ = CreateAssignmentToken($1, oper);
+               delete $1;
+               delete $3;
+               delete oper;
+             }
+           | lvalue MINUS_ASSIGN rvalue
+             {
+               auto oper = CreateOperationToken("MINUS", $1, $3);
+               $$ = CreateAssignmentToken($1, oper);
+               delete $1;
+               delete $3;
+               delete oper;
+             }
+           | lvalue MUL_ASSIGN rvalue
+             {
+               auto oper = CreateOperationToken("MUL", $1, $3);
+               $$ = CreateAssignmentToken($1, oper);
+               delete $1;
+               delete $3;
+               delete oper;
+             }
+           | lvalue DIV_ASSIGN rvalue
+             {
+               auto oper = CreateOperationToken("DIV", $1, $3);
+               $$ = CreateAssignmentToken($1, oper);
+               delete $1;
+               delete $3;
+               delete oper;
+             }
+           | lvalue MOD_ASSIGN rvalue
+             {
+               auto oper = CreateOperationToken("MOD", $1, $3);
+               $$ = CreateAssignmentToken($1, oper);
+               delete $1;
+               delete $3;
+               delete oper;
+             }
+           | lvalue EXP_ASSIGN rvalue
+             {
+               auto oper = CreateOperationToken("EXP", $1, $3);
+               $$ = CreateAssignmentToken($1, oper);
+               delete $1;
+               delete $3;
+               delete oper;
+             }
+           ;
 
 array_definition : LEFT_SBRACKET array_definition_elements RIGHT_SBRACKET
                   ;
@@ -198,12 +243,12 @@ lvalue : ID
          }
        ;
 
-rvalue : lvalue
-         | LEFT_RBRACKET rvalue RIGHT_RBRACKET
-         | assignment
-         | array_definition
-         | ternary_statement
-         | function_call
+rvalue : lvalue { $$ = $1; }
+         | LEFT_RBRACKET rvalue RIGHT_RBRACKET { $$ = $2; }
+         | assignment { $$ = $1; }
+         | array_definition { $$ = $1; }
+         | ternary_statement { $$ = $1; }
+         | function_call { $$ = $1; }
          | CHAR { $$ = new StringSyntaxToken(d_scanner.matched()); }
          | LITERAL { $$ = new StringSyntaxToken(d_scanner.matched()); }
          | NUM_FLOAT { $$ = new FloatSyntaxToken(s2double(d_scanner.matched())); }
