@@ -185,27 +185,27 @@ rvalue : lvalue
              $$->Children().push_back(*$2);
              delete $2;
            }
-         | NOT rvalue { $$ = CreateOperationToken("NOT", $1, NULL) }
-         | BIT_NOT rvalue { $$ = CreateOperationToken("BIT_NOT", $1, NULL) }
-         | rvalue EQUAL rvalue { $$ = CreateOperationToken("EQUAL", $1, $2) }
-         | rvalue NOT_EQUAL rvalue { $$ = CreateOperationToken("NOT_EQUAL", $1, $2) }
-         | rvalue LESS_EQUAL rvalue { $$ = CreateOperationToken("LESS_EQUAL", $1, $2) }
-         | rvalue LESS rvalue { $$ = CreateOperationToken("LESS", $1, $2) }
-         | rvalue GREATER rvalue { $$ = CreateOperationToken("GREATER", $1, $2) }
-         | rvalue GREATER_EQUAL rvalue { $$ = CreateOperationToken("GREATER_EQUAL", $1, $2) }
-         | rvalue OR rvalue { $$ = CreateOperationToken("OR", $1, $2) }
-         | rvalue AND rvalue { $$ = CreateOperationToken("AND", $1, $2) }
-         | rvalue BIT_OR rvalue { $$ = CreateOperationToken("BIT_OR", $1, $2) }
-         | rvalue BIT_XOR rvalue { $$ = CreateOperationToken("BIT_XOR", $1, $2) }
-         | rvalue BIT_AND rvalue { $$ = CreateOperationToken("BIT_AND", $1, $2) }
-         | rvalue BIT_SHL rvalue { $$ = CreateOperationToken("BIT_SHL", $1, $2) }
-         | rvalue BIT_SHR rvalue { $$ = CreateOperationToken("BIT_SHR", $1, $2) }
-         | rvalue PLUS rvalue { $$ = CreateOperationToken("PLUS", $1, $2) }
-         | rvalue MINUS rvalue { $$ = CreateOperationToken("MINUS", $1, $2) }
-         | rvalue MUL rvalue { $$ = CreateOperationToken("MUL", $1, $2) }
-         | rvalue DIV rvalue { $$ = CreateOperationToken("DIV", $1, $2) }
-         | rvalue MOD rvalue { $$ = CreateOperationToken("MOD", $1, $2) }
-         | rvalue EXP rvalue { $$ = CreateOperationToken("EXP", $1, $2) }
+         | NOT rvalue { $$ = CreateOperationToken("NOT", $1, NULL); }
+         | BIT_NOT rvalue { $$ = CreateOperationToken("BIT_NOT", $1, NULL); }
+         | rvalue EQUAL rvalue { $$ = CreateOperationToken("EQUAL", $1, $2); }
+         | rvalue NOT_EQUAL rvalue { $$ = CreateOperationToken("NOT_EQUAL", $1, $2); }
+         | rvalue LESS_EQUAL rvalue { $$ = CreateOperationToken("LESS_EQUAL", $1, $2); }
+         | rvalue LESS rvalue { $$ = CreateOperationToken("LESS", $1, $2); }
+         | rvalue GREATER rvalue { $$ = CreateOperationToken("GREATER", $1, $2); }
+         | rvalue GREATER_EQUAL rvalue { $$ = CreateOperationToken("GREATER_EQUAL", $1, $2); }
+         | rvalue OR rvalue { $$ = CreateOperationToken("OR", $1, $2); }
+         | rvalue AND rvalue { $$ = CreateOperationToken("AND", $1, $2); }
+         | rvalue BIT_OR rvalue { $$ = CreateOperationToken("BIT_OR", $1, $2); }
+         | rvalue BIT_XOR rvalue { $$ = CreateOperationToken("BIT_XOR", $1, $2); }
+         | rvalue BIT_AND rvalue { $$ = CreateOperationToken("BIT_AND", $1, $2); }
+         | rvalue BIT_SHL rvalue { $$ = CreateOperationToken("BIT_SHL", $1, $2); }
+         | rvalue BIT_SHR rvalue { $$ = CreateOperationToken("BIT_SHR", $1, $2); }
+         | rvalue PLUS rvalue { $$ = CreateOperationToken("PLUS", $1, $2); }
+         | rvalue MINUS rvalue { $$ = CreateOperationToken("MINUS", $1, $2); }
+         | rvalue MUL rvalue { $$ = CreateOperationToken("MUL", $1, $2); }
+         | rvalue DIV rvalue { $$ = CreateOperationToken("DIV", $1, $2); }
+         | rvalue MOD rvalue { $$ = CreateOperationToken("MOD", $1, $2); }
+         | rvalue EXP rvalue { $$ = CreateOperationToken("EXP", $1, $2); }
          ;
 
 defined_param : ID
