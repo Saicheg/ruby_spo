@@ -157,14 +157,46 @@ array_definition_elements : rvalue
                            ;
 
 array_selector : ID LEFT_SBRACKET rvalue RIGHT_SBRACKET
+                 {
+                   $$ = new SyntaxToken(SyntaxTokenType::ArraySelector);
+                   $$->Children().push_back(*$1);
+                   $$->Children().push_back(*$3);
+                   delete $1;
+                   delete $3;
+                 }
                | ID_GLOBAL LEFT_SBRACKET rvalue RIGHT_SBRACKET
-//               | function_call array_selector_param
+                 {
+                   $$ = new SyntaxToken(SyntaxTokenType::ArraySelector);
+                   $$->Children().push_back(*$1);
+                   $$->Children().push_back(*$3);
+                   delete $1;
+                   delete $3;
+                 }
+               | function_call LEFT_SBRACKET rvalue RIGHT_SBRACKET
+                 {
+                   $$ = new SyntaxToken(SyntaxTokenType::ArraySelector);
+                   $$->Children().push_back(*$1);
+                   $$->Children().push_back(*$3);
+                   delete $1;
+                   delete $3;
+                 }
                ;
 
 lvalue : ID
-         | ID_GLOBAL
-         | array_selector
-         ;
+         {
+           $$ = new StringSyntaxToken(d_scanner.matched());
+           $$->SetType(SyntaxTokenType::IdentifierToken);
+         }
+       | ID_GLOBAL
+         {
+           $$ = new StringSyntaxToken(d_scanner.matched());
+           $$->SetType(SyntaxTokenType::GlobalIdentifierToken);
+         }
+       | array_selector
+         {
+           $$ = $1;
+         }
+       ;
 
 rvalue : lvalue
          | LEFT_RBRACKET rvalue RIGHT_RBRACKET
