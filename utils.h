@@ -22,7 +22,7 @@ long int s2int( const string& s)
 	return x;
 } 
 
-SyntaxToken* CreateOperationToken(string operationType, SyntaxToken* &arg1, SyntaxToken* &arg2)
+SyntaxToken* CreateOperationToken(string operationType, SyntaxToken* arg1, SyntaxToken* arg2)
 {
     SyntaxToken* opType = new StringSyntaxToken(operationType);
     opType->SetType(SyntaxTokenType::OperationTypeToken);
