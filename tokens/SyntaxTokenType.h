@@ -28,8 +28,9 @@ enum SyntaxTokenType
 	DefinedToken,
 	
 	CaseToken,
-	CasesListToken,
-	CasesDefaultCaseToken,
+	CaseListToken,
+	CaseWhenToken,
+	CaseDefaultToken,
 	
 	AliasToken,
 	ReturnToken,

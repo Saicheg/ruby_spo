@@ -240,11 +240,47 @@ while_expression_list : expression terminator
                       | while_expression_list BREAK terminator
                       ;
 case_statement : CASE rvalue CRLF case_expression_list END
+                 {
+                   $$ = new SyntaxToken(SyntaxTokenType::CaseToken);
+                   $$->Children().push_back(*$2);
+                   $$->Children().push_back(*$4);
+                   delete $2;
+                   delete $4;
+                 }
                | CASE rvalue CRLF case_expression_list ELSE expression_list END
+                 {
+                   auto defaultCase = SyntaxToken(SyntaxTokenType::CaseDefaultToken);
+                   defaultCase.Children().push_back(*$6);
+                   $$ = new SyntaxToken(SyntaxTokenType::CaseToken);
+                   $$->Children().push_back(*$2);
+                   $$->Children().push_back(*$4);
+                   $$->Children().push_back(defaultCase);
+                   delete $2;
+                   delete $4;
+                   delete $6;
+                 }
                ;
                
 case_expression_list : WHEN rvalue CRLF expression_list
+                       {
+                         $$ = new SyntaxToken(SyntaxTokenType::CaseListToken);
+                         auto item = SyntaxToken(SyntaxTokenType::CaseWhenToken);
+                         item.Children().push_back(*$2);
+                         item.Children().push_back(*$4);
+                         $$->Children().push_back(item);
+                         delete $2;
+                         delete $4;
+                       }
                      | case_expression_list WHEN rvalue CRLF expression_list
+                       {
+                         auto item = SyntaxToken(SyntaxTokenType::CaseWhenToken);
+                         item.Children().push_back(*$3);
+                         item.Children().push_back(*$5);
+                         $1->Children().push_back(item);
+                         $$ = $1;
+                         delete $3;
+                         delete $5;
+                       }
                      ;
                      
 ternary_statement : rvalue TERNARY_THEN rvalue TERNARY_ELSE rvalue
