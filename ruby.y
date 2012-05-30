@@ -39,26 +39,36 @@
 %%
 
 program : /* empty */
-         | expression_list
-         ;
+        | expression_list
+        ;
 
 /* expression - any code block */
 expression_list : expression terminator
-            | expression_list expression terminator
-            | error
-            ;
+                  {
+                    $$ = new SyntaxToken(SyntaxTokenType::ExpressionList);
+                    $$->Children().push_back(*$1);
+                    delete $1;
+                  }
+                | expression_list expression terminator
+                  {
+                    $1->Children().push_back(*$2);
+                    delete $2;
+                    $$ = $1;
+                  }
+                | error
+                ;
 
 expression : function_definition
-            | undef_statement
-            | require_block
-            | if_statement
-            | unless_statement
-            | case_statement
-            | alias_statement
-            | rvalue
-            | return_statement
-            | while_statement
-            ;
+           | undef_statement
+           | require_block
+           | if_statement
+           | unless_statement
+           | case_statement
+           | alias_statement
+           | rvalue
+           | return_statement
+           | while_statement
+          ;
 
 require_block : REQUIRE LITERAL
                 {
@@ -70,26 +80,80 @@ require_block : REQUIRE LITERAL
 
 
 function_definition : function_definition_header function_definition_body END
+                      {
+                        $$ = new SyntaxToken(SyntaxTokenType::FunctionDefinition);
+                        $$->Children().push_back(*$1);
+                        $$->Children().push_back(*$2);
+                        delete $1;
+                        delete $2;
+                      }
                      ;
 
 function_definition_body : /* empty */
-                           | expression_list
-                           ;
+                           {
+                             $$ = new NilSyntaxToken();
+                           }
+                         | expression_list
+                           {
+                             $$ = $1;
+                           }
+                         ;
 
 function_definition_header : DEF function_name CRLF
+                             {
+                               $$ = new SyntaxToken(SyntaxTokenType::FunctionDefinitionHeader);
+                               $$->Children().push_back(*$2);
+                               auto params = SyntaxToken(SyntaxTokenType::FunctionDefinitionParams);
+                               params.Children().push_back(NilSyntaxToken());
+                               $$->Children().push_back(params);
+                               delete $2;
+                             }
                            | DEF function_name function_definition_params CRLF
+                             {
+                               $$ = new SyntaxToken(SyntaxTokenType::FunctionDefinitionHeader);
+                               $$->Children().push_back(*$2);
+                               $$->Children().push_back(*$3);
+                               delete $2;
+                               delete $3;
+                             }
                            ;
 
 function_name : ID_FUNCTION
+                {
+                  $$ = new StringSyntaxToken(d_scanner.matched());
+                  $$->SetType(SyntaxTokenType::FunctionIdentifierToken);
+                }
               | ID
+                {
+                  $$ = new StringSyntaxToken(d_scanner.matched());
+                  $$->SetType(SyntaxTokenType::IdentifierToken);
+                }
               ;
 
 function_definition_params : LEFT_RBRACKET function_definition_params_list RIGHT_RBRACKET
+                             {
+                               $$ = $2;
+                             }
                            ;
 
-function_definition_params_list : ID
-                                 | ID COMMA function_definition_params_list
-                                 ;
+function_definition_params_list : /* empty */
+                                  {
+                                    $$ = new SyntaxToken(SyntaxTokenType::FunctionDefinitionParams);
+                                    $$->Children().push_back(NilSyntaxToken());
+                                  }
+                                | ID
+                                  {
+                                    $$ = new SyntaxToken(SyntaxTokenType::FunctionDefinitionParams);
+                                    $$->Children().push_back(*$1);
+                                    delete $1;
+                                  }
+                                | function_definition_params_list COMMA ID
+                                  {
+                                    $1->Children().push_back(*$3);
+                                    delete $3;
+                                    $$ = $1;
+                                  }
+                                ;
 
 
 return_statement : RETURN rvalue
@@ -101,14 +165,38 @@ return_statement : RETURN rvalue
                  ;
 
 function_call : function_name LEFT_RBRACKET function_call_param_list RIGHT_RBRACKET
-               ;
+                {
+                  $$ = new SyntaxToken(SyntaxTokenType::FunctionCall);
+                  $$->Children().push_back(*$1);
+                  $$->Children().push_back(*$3);
+                  delete $1;
+                  delete $3;
+                }
+              ;
 
 function_call_param_list : /* empty */
-                           | function_call_params
-                           ;
+                           {
+                             $$ = new SyntaxToken(SyntaxTokenType::FunctionCallParams);
+                             $$->Children().push_back(NilSyntaxToken());
+                           }
+                         | function_call_params
+                           {
+                             $$ = $1;
+                           }
+                         ;
 
 function_call_params : rvalue
+                       {
+                         $$ = new SyntaxToken(SyntaxTokenType::FunctionCallParams);
+                         $$->Children().push_back(*$1);
+                         delete $1;
+                       }
                      | function_call_params COMMA rvalue
+                       {
+                         $1->Children().push_back(*$3);
+                         $$ = $1;
+                         delete $3;
+                       }
                      ;
                      
 undef_statement : UNDEF ID
@@ -160,6 +248,15 @@ case_expression_list : WHEN rvalue CRLF expression_list
                      ;
                      
 ternary_statement : rvalue TERNARY_THEN rvalue TERNARY_ELSE rvalue
+                    {
+                      $$ = new SyntaxToken(SyntaxTokenType::TernaryToken);
+                      $$->Children().push_back(*$1);
+                      $$->Children().push_back(*$3);
+                      $$->Children().push_back(*$5);
+                      delete $1;
+                      delete $3;
+                      delete $5;
+                    }
                   ; 
 
 assignment : lvalue ASSIGN rvalue

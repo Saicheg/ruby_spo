@@ -16,12 +16,13 @@ enum SyntaxTokenType
 	ExpressionList,
 	
 	FunctionDefinition,
-	FunctionDefinitionName,
+	FunctionDefinitionHeader,
 	FunctionDefinitionParams,
 	FunctionCall,
 	FunctionCallParams,
 	
 	IfToken,
+	TernaryToken,
 	UndefToken,
 	RequireToken,
 	DefinedToken,
