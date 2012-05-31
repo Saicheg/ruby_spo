@@ -250,18 +250,13 @@ if_elsif_statement : ELSIF rvalue CRLF expression_list
                        $$ = new SyntaxToken(SyntaxTokenType::IfToken);
                        $$->Children().push_back($2);
                        $$->Children().push_back($4);
-                       //delete $2;
-                       //delete $4;
                      }
-                   | ELSIF rvalue CRLF expression_list ELSE expression_list
+                   | ELSIF rvalue CRLF expression_list ELSE CRLF expression_list
                      {
                        $$ = new SyntaxToken(SyntaxTokenType::IfToken);
                        $$->Children().push_back($2);
                        $$->Children().push_back($4);
-                       $$->Children().push_back($6);
-                       //delete $2;
-                       //delete $4;
-                       //delete $6;
+                       $$->Children().push_back($7);
                      }
                    | ELSIF rvalue CRLF expression_list if_elsif_statement
                      {
@@ -269,9 +264,6 @@ if_elsif_statement : ELSIF rvalue CRLF expression_list
                        $$->Children().push_back($2);
                        $$->Children().push_back($4);
                        $$->Children().push_back($5);
-                       //delete $2;
-                       //delete $4;
-                       //delete $5;
                      }
                    ;
 
@@ -280,16 +272,12 @@ if_statement : IF rvalue CRLF expression_list END
                  $$ = new SyntaxToken(SyntaxTokenType::IfToken);
                  $$->Children().push_back($2);
                  $$->Children().push_back($4);
-                 //delete $2;
-                 //delete $4;
                }
              | IF rvalue THEN expression_list END
                {
                  $$ = new SyntaxToken(SyntaxTokenType::IfToken);
                  $$->Children().push_back($2);
                  $$->Children().push_back($4);
-                 //delete $2;
-                 //delete $4;
                }
              | IF rvalue CRLF expression_list ELSE CRLF expression_list END
                {
@@ -297,9 +285,6 @@ if_statement : IF rvalue CRLF expression_list END
                  $$->Children().push_back($2);
                  $$->Children().push_back($4);
                  $$->Children().push_back($7);
-                 //delete $2;
-                 //delete $4;
-                 //delete $7;
                }
              | IF rvalue THEN expression_list ELSE expression_list END
                {
@@ -307,9 +292,6 @@ if_statement : IF rvalue CRLF expression_list END
                  $$->Children().push_back($2);
                  $$->Children().push_back($4);
                  $$->Children().push_back($6);
-                 //delete $2;
-                 //delete $4;
-                 //delete $6;
                }
              | IF rvalue CRLF expression_list if_elsif_statement END
                {
@@ -317,9 +299,6 @@ if_statement : IF rvalue CRLF expression_list END
                  $$->Children().push_back($2);
                  $$->Children().push_back($4);
                  $$->Children().push_back($5);
-                 //delete $2;
-                 //delete $4;
-                 //delete $5;
                }
              ;
                
