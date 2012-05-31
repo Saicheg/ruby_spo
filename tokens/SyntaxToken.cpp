@@ -15,7 +15,7 @@ void SyntaxToken::SetType(SyntaxTokenType type)
 	this->type = type;
 }
 
-vector<SyntaxToken> SyntaxToken::Children()
+vector<SyntaxToken*> SyntaxToken::Children()
 {
 	return this->children;
 }

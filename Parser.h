@@ -7,6 +7,7 @@
 #include "Parserbase.h"
 // $insert scanner.h
 #include "Scanner.h"
+#include "Tokens.h"
 
 
 #undef Parser
@@ -17,6 +18,7 @@ class Parser: public ParserBase
         
     public:
         int parse();
+        SyntaxToken* root;
 
     private:
         void error(char const *msg);    // called on (syntax) errors

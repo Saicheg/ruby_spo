@@ -4,6 +4,8 @@
 #include <sstream>
 using namespace std;
 
+#include "Tokens.h"
+
 double s2double( const std::string& s )
 {
 	istringstream i(s);
@@ -28,19 +30,18 @@ SyntaxToken* CreateOperationToken(string operationType, SyntaxToken* arg1, Synta
     
     SyntaxToken* opType = new StringSyntaxToken(operationType);
     opType->SetType(SyntaxTokenType::OperationTypeToken);
-    t->Children().push_back(*opType);
-    delete opType;
+    t->Children().push_back(opType);
 
     if(arg1 == NULL)
     {
     	return NULL;	
     }
 
-    t->Children().push_back(*arg1);
+    t->Children().push_back(arg1);
 
     if(arg2 != NULL)
     {
-    	t->Children().push_back(*arg2);
+    	t->Children().push_back(arg2);
     }
     return t;
 }
@@ -54,8 +55,8 @@ SyntaxToken* CreateAssignmentToken(SyntaxToken* arg1, SyntaxToken* arg2)
         return NULL;    
     }
 
-    t->Children().push_back(*arg1);
-    t->Children().push_back(*arg2);
+    t->Children().push_back(arg1);
+    t->Children().push_back(arg2);
 
     return t;
 }

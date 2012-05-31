@@ -7,8 +7,11 @@
 using namespace std;
 using namespace FBB;
 
+
+
 int main()
 {
     Parser parser;
     parser.parse();
+    cout << parser.root->GetType();
 }
