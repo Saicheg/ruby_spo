@@ -3,6 +3,7 @@
 
 #include "Scanner.h"
 #include "Parser.h"
+#include "analyzer.h"
 
 using namespace std;
 using namespace FBB;
@@ -13,5 +14,7 @@ int main()
 {
     Parser parser;
     parser.parse();
-    cout << parser.root->GetType();
+    
+    Analyzer a;
+    a.Show(parser.root);
 }
