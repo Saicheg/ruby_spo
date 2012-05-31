@@ -78,18 +78,18 @@ ID			[a-zA-Z_][a-zA-Z0-9_]*
 
 ","			{ return(Parser::COMMA); }
 
-"$"{ID}		{ return(Parser::ID_GLOBAL); }
+"$"{ID}		{ PushValue(matched()); return(Parser::ID_GLOBAL); }
 	
 ";"			{ return(Parser::SEMICOLON); }
 
 \"(\\.|[^\\"])*\" |
-\'(\\.|[^\\'])*\'   { return(Parser::LITERAL); }
+\'(\\.|[^\\'])*\'   { PushValue(matched()); return(Parser::LITERAL); }
 
-{ID}[!?]	{ return(Parser::ID_FUNCTION); }
+{ID}[!?]	{ PushValue(matched()); return(Parser::ID_FUNCTION); }
 
-{ID}		{ return(Parser::ID); }
-{FLOAT}		{ return(Parser::NUM_FLOAT); }
-{INT}		{ return(Parser::NUM_INTEGER); }
+{ID}		{ PushValue(matched()); return(Parser::ID); }
+{FLOAT}		{ PushValue(matched()); return(Parser::NUM_FLOAT); }
+{INT}		{ PushValue(matched()); return(Parser::NUM_INTEGER); }
 
 \n 			{ return(Parser::CRLF); }
 

@@ -28,15 +28,14 @@ $(FILE_LEX):
 	$(FLEX) $(FILE_LEX)
 
 compile: clean $(FILE_BISON) $(FILE_LEX)
-	g++ --std=c++0x -c tokens/*Token.cpp
-	g++ --std=c++0x -ggdb -o $(FILE_OUTPUT) $(FILE_BISON_OUTPUT) $(FILE_LEX_OUTPUT) $(FILE_ANALYZER) $(FILE_MAIN) $(LIB_BOBCAT) *Token.o
+	g++ --std=c++0x -ggdb -o $(FILE_OUTPUT) $(LIB_BOBCAT) *.cc *.cpp tokens/*Token.cpp
 	chmod +x $(FILE_OUTPUT)	
 
-run: compile
+run:
 	cat $(FILE_TEST) | ./$(FILE_OUTPUT) 
 
 clean:
 	rm -f *.o
-	rm -f Scanner.h Parserbase.h Scannerbase.h
+	rm -f Parserbase.h Scannerbase.h
 	rm -f lex.cc parse.cc
 	rm -f $(FILE_OUTPUT)

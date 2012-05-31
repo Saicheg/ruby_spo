@@ -5,6 +5,8 @@
 #include <string>
 using namespace std;
 #include "Tokens.h"
+#include "utils.h"
+#include <typeinfo>
 
 class Analyzer
 {
@@ -15,6 +17,7 @@ public:
 private:
   void PrintNode(SyntaxToken* token, int indent = 0);
   string GetTypeName(SyntaxTokenType tokenType);
+  string GetValue(SyntaxToken* token);
 
 };
 

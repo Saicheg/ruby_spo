@@ -20,6 +20,7 @@
 %token NUM_FLOAT NUM_INTEGER
 
 %left DEFINED                               /* defined? */
+%left ASSIGN PLUS_ASSIGN MINUS_ASSIGN MUL_ASSIGN DIV_ASSIGN MOD_ASSIGN EXP_ASSIGN /* = += -+ *= /= %= **=  */
 %left OR                               /* || */
 %left AND                               /* && */
 %left EQUAL NOT_EQUAL                            /* == != */
@@ -31,7 +32,6 @@
 %left MUL DIV MOD                            /* / * % */
 %left EXP                               /* ** */
 %left TERNARY_THEN TERNARY_ELSE
-%right ASSIGN PLUS_ASSIGN MINUS_ASSIGN MUL_ASSIGN DIV_ASSIGN MOD_ASSIGN EXP_ASSIGN /* = += -+ *= /= %= **=  */
 %right NOT BIT_NOT                            /* ! ~ */
 
 %start program
@@ -106,10 +106,10 @@ expression : function_definition
              }
           ;
 
-require_block : REQUIRE LITERAL
+require_block : REQUIRE literal_t
                 {
-                  $$ = new SyntaxToken(SyntaxTokenType::RequireToken);
-                  $$->Children().push_back($2);
+                  $$ = $2;
+                  $$->SetType(SyntaxTokenType::RequireToken);
                   //delete $2;
                 }
               ;
@@ -154,15 +154,13 @@ function_definition_header : DEF function_name CRLF
                              }
                            ;
 
-function_name : ID_FUNCTION
+function_name : id_function
                 {
-                  $$ = new StringSyntaxToken(d_scanner.matched());
-                  $$->SetType(SyntaxTokenType::FunctionIdentifierToken);
+                  $$ = $1;
                 }
-              | ID
+              | id
                 {
-                  $$ = new StringSyntaxToken(d_scanner.matched());
-                  $$->SetType(SyntaxTokenType::IdentifierToken);
+                  $$ = $1;
                 }
               ;
 
@@ -177,13 +175,13 @@ function_definition_params_list : /* empty */
                                     $$ = new SyntaxToken(SyntaxTokenType::FunctionDefinitionParams);
                                     $$->Children().push_back(new NilSyntaxToken());
                                   }
-                                | ID
+                                | id
                                   {
                                     $$ = new SyntaxToken(SyntaxTokenType::FunctionDefinitionParams);
                                     $$->Children().push_back($1);
                                     //delete $1;
                                   }
-                                | function_definition_params_list COMMA ID
+                                | function_definition_params_list COMMA id
                                   {
                                     $1->Children().push_back($3);
                                     //delete $3;
@@ -235,7 +233,7 @@ function_call_params : rvalue
                        }
                      ;
                      
-undef_statement : UNDEF ID
+undef_statement : UNDEF id
                   {
                     $$ = new SyntaxToken(SyntaxTokenType::UndefToken);
                     $$->Children().push_back($2);
@@ -243,7 +241,7 @@ undef_statement : UNDEF ID
                   }
                 ;
                 
-alias_statement : ALIAS LITERAL LITERAL
+alias_statement : ALIAS literal_t literal_t
                   {
                     $$ = new SyntaxToken(SyntaxTokenType::AliasToken);
                     $$->Children().push_back($2);
@@ -514,7 +512,7 @@ array_definition_elements : rvalue
                             }
                           ;
 
-array_selector : ID LEFT_SBRACKET rvalue RIGHT_SBRACKET
+array_selector : id LEFT_SBRACKET rvalue RIGHT_SBRACKET
                  {
                    $$ = new SyntaxToken(SyntaxTokenType::ArraySelector);
                    $$->Children().push_back($1);
@@ -522,7 +520,7 @@ array_selector : ID LEFT_SBRACKET rvalue RIGHT_SBRACKET
                    //delete $1;
                    //delete $3;
                  }
-               | ID_GLOBAL LEFT_SBRACKET rvalue RIGHT_SBRACKET
+               | id_global LEFT_SBRACKET rvalue RIGHT_SBRACKET
                  {
                    $$ = new SyntaxToken(SyntaxTokenType::ArraySelector);
                    $$->Children().push_back($1);
@@ -540,15 +538,13 @@ array_selector : ID LEFT_SBRACKET rvalue RIGHT_SBRACKET
                  }
                ;
 
-lvalue : ID
+lvalue : id
          {
-           $$ = new StringSyntaxToken(d_scanner.matched());
-           $$->SetType(SyntaxTokenType::IdentifierToken);
+           $$ = $1;
          }
-       | ID_GLOBAL
+       | id_global
          {
-           $$ = new StringSyntaxToken(d_scanner.matched());
-           $$->SetType(SyntaxTokenType::GlobalIdentifierToken);
+           $$ = $1;
          }
        | array_selector
          {
@@ -562,62 +558,83 @@ rvalue : lvalue { $$ = $1; }
          | array_definition { $$ = $1; }
          | ternary_statement { $$ = $1; }
          | function_call { $$ = $1; }
-         | CHAR { $$ = new StringSyntaxToken(d_scanner.matched()); }
-         | LITERAL { $$ = new StringSyntaxToken(d_scanner.matched()); }
-         | NUM_FLOAT { $$ = new FloatSyntaxToken(s2double(d_scanner.matched())); }
-         | NUM_INTEGER { $$ = new IntegerSyntaxToken(s2int(d_scanner.matched())); }
-         | TRUE { $$ = new BooleanSyntaxToken(true); }
-         | FALSE { $$ = new BooleanSyntaxToken(false); }
-         | NIL { $$ = new NilSyntaxToken(); }
          | DEFINED defined_param
            {
              $$ = new SyntaxToken(SyntaxTokenType::DefinedToken);
              $$->Children().push_back($2);
              //delete $2;
            }
+         | literal_t { $$ = $1; }
+         | bool_t { $$ = $1; }
+         | float_t { $$ = $1; }
+         | int_t { $$ = $1; }
+         | nil_t { $$ = $1; }
          | NOT rvalue { $$ = CreateOperationToken("NOT", $1, NULL); }
          | BIT_NOT rvalue { $$ = CreateOperationToken("BIT_NOT", $1, NULL); }
-         | rvalue EQUAL rvalue { $$ = CreateOperationToken("EQUAL", $1, $2); }
-         | rvalue NOT_EQUAL rvalue { $$ = CreateOperationToken("NOT_EQUAL", $1, $2); }
-         | rvalue LESS_EQUAL rvalue { $$ = CreateOperationToken("LESS_EQUAL", $1, $2); }
-         | rvalue LESS rvalue { $$ = CreateOperationToken("LESS", $1, $2); }
-         | rvalue GREATER rvalue { $$ = CreateOperationToken("GREATER", $1, $2); }
-         | rvalue GREATER_EQUAL rvalue { $$ = CreateOperationToken("GREATER_EQUAL", $1, $2); }
-         | rvalue OR rvalue { $$ = CreateOperationToken("OR", $1, $2); }
-         | rvalue AND rvalue { $$ = CreateOperationToken("AND", $1, $2); }
-         | rvalue BIT_OR rvalue { $$ = CreateOperationToken("BIT_OR", $1, $2); }
-         | rvalue BIT_XOR rvalue { $$ = CreateOperationToken("BIT_XOR", $1, $2); }
-         | rvalue BIT_AND rvalue { $$ = CreateOperationToken("BIT_AND", $1, $2); }
-         | rvalue BIT_SHL rvalue { $$ = CreateOperationToken("BIT_SHL", $1, $2); }
-         | rvalue BIT_SHR rvalue { $$ = CreateOperationToken("BIT_SHR", $1, $2); }
-         | rvalue PLUS rvalue { $$ = CreateOperationToken("PLUS", $1, $2); }
-         | rvalue MINUS rvalue { $$ = CreateOperationToken("MINUS", $1, $2); }
-         | rvalue MUL rvalue { $$ = CreateOperationToken("MUL", $1, $2); }
-         | rvalue DIV rvalue { $$ = CreateOperationToken("DIV", $1, $2); }
-         | rvalue MOD rvalue { $$ = CreateOperationToken("MOD", $1, $2); }
-         | rvalue EXP rvalue { $$ = CreateOperationToken("EXP", $1, $2); }
+         | rvalue EQUAL rvalue { $$ = CreateOperationToken("EQUAL", $1, $3); }
+         | rvalue NOT_EQUAL rvalue { $$ = CreateOperationToken("NOT_EQUAL", $1, $3); }
+         | rvalue LESS_EQUAL rvalue { $$ = CreateOperationToken("LESS_EQUAL", $1, $3); }
+         | rvalue LESS rvalue { $$ = CreateOperationToken("LESS", $1, $3); }
+         | rvalue GREATER rvalue { $$ = CreateOperationToken("GREATER", $1, $3); }
+         | rvalue GREATER_EQUAL rvalue { $$ = CreateOperationToken("GREATER_EQUAL", $1, $3); }
+         | rvalue OR rvalue { $$ = CreateOperationToken("OR", $1, $3); }
+         | rvalue AND rvalue { $$ = CreateOperationToken("AND", $1, $3); }
+         | rvalue BIT_OR rvalue { $$ = CreateOperationToken("BIT_OR", $1, $3); }
+         | rvalue BIT_XOR rvalue { $$ = CreateOperationToken("BIT_XOR", $1, $3); }
+         | rvalue BIT_AND rvalue { $$ = CreateOperationToken("BIT_AND", $1, $3); }
+         | rvalue BIT_SHL rvalue { $$ = CreateOperationToken("BIT_SHL", $1, $3); }
+         | rvalue BIT_SHR rvalue { $$ = CreateOperationToken("BIT_SHR", $1, $3); }
+         | rvalue PLUS rvalue { $$ = CreateOperationToken("PLUS", $1, $3); }
+         | rvalue MINUS rvalue { $$ = CreateOperationToken("MINUS", $1, $3); }
+         | rvalue MUL rvalue { $$ = CreateOperationToken("MUL", $1, $3); }
+         | rvalue DIV rvalue { $$ = CreateOperationToken("DIV", $1, $3); }
+         | rvalue MOD rvalue { $$ = CreateOperationToken("MOD", $1, $3); }
+         | rvalue EXP rvalue { $$ = CreateOperationToken("EXP", $1, $3); }
          ;
 
-defined_param : ID
-                {
-                  $$ = new StringSyntaxToken(d_scanner.matched());
-                  $$->SetType(SyntaxTokenType::IdentifierToken);
-                } 
-              | ID_GLOBAL
-                {
-                  $$ = new StringSyntaxToken(d_scanner.matched());
-                  $$->SetType(SyntaxTokenType::GlobalIdentifierToken);
-                } 
-              | ID_FUNCTION
-                {
-                  $$ = new StringSyntaxToken(d_scanner.matched());
-                  $$->SetType(SyntaxTokenType::FunctionIdentifierToken);
-                } 
+defined_param : id { $$ = $1;}
+              | id_global { $$ = $1;}
+              | id_function { $$ = $1;}
               | LEFT_RBRACKET defined_param RIGHT_RBRACKET
                 {
                   $$ = $2;
                 }
               ;
+
+literal_t : LITERAL { $$ = new StringSyntaxToken(d_scanner.PopValue()); }
+          | CHAR { $$ = new StringSyntaxToken(d_scanner.PopValue()); }
+          ;
+float_t : NUM_FLOAT { $$ = new FloatSyntaxToken(s2double(d_scanner.PopValue())); }
+        ;
+int_t : NUM_INTEGER { $$ = new IntegerSyntaxToken(s2int(d_scanner.PopValue())); }
+      ;
+bool_t : TRUE { $$ = new BooleanSyntaxToken(true); }
+       | FALSE { $$ = new BooleanSyntaxToken(false); }
+       ;
+nil_t : NIL { $$ = new NilSyntaxToken(); }
+      ;
+
+id : ID
+     {
+       $$ = new StringSyntaxToken(d_scanner.PopValue());
+       $$->SetType(SyntaxTokenType::IdentifierToken);
+     }
+   ;
+id_global : ID_GLOBAL
+            {
+              $$ = new StringSyntaxToken(d_scanner.PopValue());
+              $$->SetType(SyntaxTokenType::GlobalIdentifierToken);
+            } 
+          ;
+id_function : ID_FUNCTION
+              {
+                $$ = new StringSyntaxToken(d_scanner.PopValue());
+                $$->SetType(SyntaxTokenType::FunctionIdentifierToken);
+              } 
+            ;
+
+
+
 
 terminator : terminator SEMICOLON
             | terminator CRLF
