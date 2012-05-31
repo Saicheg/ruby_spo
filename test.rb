@@ -39,6 +39,17 @@ else
   c = !(a && b) || (a & b)
 end
 
+
+if (c > pi())
+  c = a || b
+elsif (c>5)
+  return 4
+elsif (c>5 && c<3)
+  return 4
+else
+  return 4
+end
+
 k = defined?(a)
 
 str1 = "i am a single quote string"

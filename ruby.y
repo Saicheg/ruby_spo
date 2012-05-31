@@ -61,7 +61,6 @@ expression_list : expression terminator
                     //delete $2;
                     $$ = $1;
                   }
-                | error
                 ;
 
 expression : function_definition
@@ -569,8 +568,8 @@ rvalue : lvalue { $$ = $1; }
          | float_t { $$ = $1; }
          | int_t { $$ = $1; }
          | nil_t { $$ = $1; }
-         | NOT rvalue { $$ = CreateOperationToken("NOT", $1, NULL); }
-         | BIT_NOT rvalue { $$ = CreateOperationToken("BIT_NOT", $1, NULL); }
+         | NOT rvalue { $$ = CreateOperationToken("NOT", $2, NULL); }
+         | BIT_NOT rvalue { $$ = CreateOperationToken("BIT_NOT", $2, NULL); }
          | rvalue EQUAL rvalue { $$ = CreateOperationToken("EQUAL", $1, $3); }
          | rvalue NOT_EQUAL rvalue { $$ = CreateOperationToken("NOT_EQUAL", $1, $3); }
          | rvalue LESS_EQUAL rvalue { $$ = CreateOperationToken("LESS_EQUAL", $1, $3); }
