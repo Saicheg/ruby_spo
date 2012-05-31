@@ -38,27 +38,30 @@
 
 %%
 
-program : /* empty */
-          {
-            root = new SyntaxToken(SyntaxTokenType::ExpressionList);
-          }
-        | expression_list
+program : expression_list
           {
             root = $1;
           }
         ;
 
-/* expression - any code block */
-expression_list : expression terminator
+
+expression_list_nonempty : expression terminator
+                           {
+                             $$ = new SyntaxToken(SyntaxTokenType::ExpressionList);
+                             $$->Children().push_back($1);
+                           }
+                         | expression_list_nonempty expression terminator
+                           {
+                             $1->Children().push_back($2);
+                             $$ = $1;
+                           }
+                         ;
+expression_list : /* empty*/
                   {
                     $$ = new SyntaxToken(SyntaxTokenType::ExpressionList);
-                    $$->Children().push_back($1);
-                    //delete $1;
                   }
-                | expression_list expression terminator
+                | expression_list_nonempty
                   {
-                    $1->Children().push_back($2);
-                    //delete $2;
                     $$ = $1;
                   }
                 ;
@@ -124,11 +127,7 @@ function_definition : function_definition_header function_definition_body END
                       }
                      ;
 
-function_definition_body : /* empty */
-                           {
-                             $$ = new NilSyntaxToken();
-                           }
-                         | expression_list
+function_definition_body : expression_list
                            {
                              $$ = $1;
                            }
@@ -172,18 +171,15 @@ function_definition_params : LEFT_RBRACKET function_definition_params_list RIGHT
 function_definition_params_list : /* empty */
                                   {
                                     $$ = new SyntaxToken(SyntaxTokenType::FunctionDefinitionParams);
-                                    $$->Children().push_back(new NilSyntaxToken());
                                   }
                                 | id
                                   {
                                     $$ = new SyntaxToken(SyntaxTokenType::FunctionDefinitionParams);
                                     $$->Children().push_back($1);
-                                    //delete $1;
                                   }
                                 | function_definition_params_list COMMA id
                                   {
                                     $1->Children().push_back($3);
-                                    //delete $3;
                                     $$ = $1;
                                   }
                                 ;
@@ -210,7 +206,6 @@ function_call : function_name LEFT_RBRACKET function_call_param_list RIGHT_RBRAC
 function_call_param_list : /* empty */
                            {
                              $$ = new SyntaxToken(SyntaxTokenType::FunctionCallParams);
-                             $$->Children().push_back(new NilSyntaxToken());
                            }
                          | function_call_params
                            {
