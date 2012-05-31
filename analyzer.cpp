@@ -12,7 +12,7 @@ void Analyzer::PrintNode(SyntaxToken* token, int indent)
 
   for(int i=0; i < indent;i++) cout << "  ";
 
-  cout << GetTypeName(token->GetType()) << endl;
+  cout << GetTypeName(token->GetType()) << " (" << token->Children().size() << " children)" << endl;
 
   for(auto i = token->Children().begin(); i != token->Children().end(); ++i)
   {
@@ -26,7 +26,9 @@ string Analyzer::GetTypeName(SyntaxTokenType tokenType)
   switch(tokenType)
   {
     case SyntaxTokenType::NilToken:
-      return "NilToken";
+      return "Nil token";
+    case SyntaxTokenType::ExpressionList:
+      return "Expression list";
     default:
       return "Some shit!";  
   }
