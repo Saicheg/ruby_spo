@@ -39,7 +39,13 @@
 %%
 
 program : /* empty */
+          {
+            $$ = new SyntaxToken(SyntaxTokenType::ExpressionList);
+          }
         | expression_list
+          {
+            $$ = $1;
+          }
         ;
 
 /* expression - any code block */
@@ -59,15 +65,45 @@ expression_list : expression terminator
                 ;
 
 expression : function_definition
+             {
+               $$ = $1;
+             }
            | undef_statement
+             {
+               $$ = $1;
+             }
            | require_block
+             {
+               $$ = $1;
+             }
            | if_statement
+             {
+               $$ = $1;
+             }
            | unless_statement
+             {
+               $$ = $1;
+             }
            | case_statement
+             {
+               $$ = $1;
+             }
            | alias_statement
+             {
+               $$ = $1;
+             }
            | rvalue
+             {
+               $$ = $1;
+             }
            | return_statement
+             {
+               $$ = $1;
+             }
            | while_statement
+             {
+               $$ = $1;
+             }
           ;
 
 require_block : REQUIRE LITERAL
@@ -218,15 +254,91 @@ alias_statement : ALIAS LITERAL LITERAL
                 ;                
 
 if_elsif_statement : ELSIF rvalue CRLF expression_list
-                    | ELSIF rvalue CRLF expression_list if_elsif_statement
-                    ;
+                     {
+                       $$ = new SyntaxToken(SyntaxTokenType::IfToken);
+                       $$->Children().push_back(*$2);
+                       $$->Children().push_back(*$4);
+                       delete $2;
+                       delete $4;
+                     }
+                   | ELSIF rvalue CRLF expression_list ELSE expression_list
+                     {
+                       $$ = new SyntaxToken(SyntaxTokenType::IfToken);
+                       $$->Children().push_back(*$2);
+                       $$->Children().push_back(*$4);
+                       $$->Children().push_back(*$6);
+                       delete $2;
+                       delete $4;
+                       delete $6;
+                     }
+                   | ELSIF rvalue CRLF expression_list if_elsif_statement
+                     {
+                       $$ = new SyntaxToken(SyntaxTokenType::IfToken);
+                       $$->Children().push_back(*$2);
+                       $$->Children().push_back(*$4);
+                       $$->Children().push_back(*$5);
+                       delete $2;
+                       delete $4;
+                       delete $5;
+                     }
+                   ;
 
-if_statement : IF rvalue CRLF expression_list ELSE CRLF expression_list END
-               | IF rvalue THEN expression_list ELSE expression_list END
-               | IF rvalue CRLF expression_list if_elsif_statement END
-               ;
+if_statement : IF rvalue CRLF expression_list END
+               {
+                 $$ = new SyntaxToken(SyntaxTokenType::IfToken);
+                 $$->Children().push_back(*$2);
+                 $$->Children().push_back(*$4);
+                 delete $2;
+                 delete $4;
+               }
+             | IF rvalue THEN expression_list END
+               {
+                 $$ = new SyntaxToken(SyntaxTokenType::IfToken);
+                 $$->Children().push_back(*$2);
+                 $$->Children().push_back(*$4);
+                 delete $2;
+                 delete $4;
+               }
+             | IF rvalue CRLF expression_list ELSE CRLF expression_list END
+               {
+                 $$ = new SyntaxToken(SyntaxTokenType::IfToken);
+                 $$->Children().push_back(*$2);
+                 $$->Children().push_back(*$4);
+                 $$->Children().push_back(*$7);
+                 delete $2;
+                 delete $4;
+                 delete $7;
+               }
+             | IF rvalue THEN expression_list ELSE expression_list END
+               {
+                 $$ = new SyntaxToken(SyntaxTokenType::IfToken);
+                 $$->Children().push_back(*$2);
+                 $$->Children().push_back(*$4);
+                 $$->Children().push_back(*$6);
+                 delete $2;
+                 delete $4;
+                 delete $6;
+               }
+             | IF rvalue CRLF expression_list if_elsif_statement END
+               {
+                 $$ = new SyntaxToken(SyntaxTokenType::IfToken);
+                 $$->Children().push_back(*$2);
+                 $$->Children().push_back(*$4);
+                 $$->Children().push_back(*$5);
+                 delete $2;
+                 delete $4;
+                 delete $5;
+               }
+             ;
                
 unless_statement : UNLESS rvalue CRLF expression_list END
+                   {
+                     $$ = new SyntaxToken(SyntaxTokenType::UnlessToken);
+                     $$->Children().push_back(*$2);
+                     $$->Children().push_back(*$4);
+                     delete $2;
+                     delete $4;
+                   }
                  ;
 
 while_statement : WHILE rvalue CRLF while_expression_list END
