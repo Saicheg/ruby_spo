@@ -3,7 +3,7 @@
 
 #include "Scanner.h"
 #include "Parser.h"
-#include "analyzer.h"
+#include "Analyzer.h"
 
 using namespace std;
 using namespace FBB;

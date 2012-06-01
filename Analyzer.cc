@@ -1,4 +1,4 @@
-#include "analyzer.h"
+#include "Analyzer.h"
 
 
 

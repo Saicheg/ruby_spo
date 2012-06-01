@@ -1,7 +1,8 @@
 %filenames Parser
 %scanner Scanner.h
 
-%stype class SyntaxToken*
+%baseclass-preinclude Tokens.h
+%stype SyntaxToken*
 
 // keywords
 %token IF THEN ELSE ELSIF UNLESS
