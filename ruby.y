@@ -112,7 +112,6 @@ require_block : REQUIRE literal_t
                 {
                   $$ = $2;
                   $$->SetType(SyntaxTokenType::RequireToken);
-                  //delete $2;
                 }
               ;
 
@@ -122,8 +121,6 @@ function_definition : function_definition_header function_definition_body END
                         $$ = new SyntaxToken(SyntaxTokenType::FunctionDefinition);
                         $$->Children().push_back($1);
                         $$->Children().push_back($2);
-                        //delete $1;
-                        //delete $2;
                       }
                      ;
 
@@ -140,15 +137,12 @@ function_definition_header : DEF function_name CRLF
                                auto params = new SyntaxToken(SyntaxTokenType::FunctionDefinitionParams);
                                params->Children().push_back(new NilSyntaxToken());
                                $$->Children().push_back(params);
-                               //delete $2;
                              }
                            | DEF function_name function_definition_params CRLF
                              {
                                $$ = new SyntaxToken(SyntaxTokenType::FunctionDefinitionHeader);
                                $$->Children().push_back($2);
                                $$->Children().push_back($3);
-                               //delete $2;
-                               //delete $3;
                              }
                            ;
 
@@ -189,7 +183,6 @@ return_statement : RETURN rvalue
                    {
                      $$ = new SyntaxToken(SyntaxTokenType::ReturnToken);
                      $$->Children().push_back($2);
-                     //delete $2;
                    }
                  ;
 
@@ -198,8 +191,6 @@ function_call : function_name LEFT_RBRACKET function_call_param_list RIGHT_RBRAC
                   $$ = new SyntaxToken(SyntaxTokenType::FunctionCall);
                   $$->Children().push_back($1);
                   $$->Children().push_back($3);
-                  //delete $1;
-                  //delete $3;
                 }
               ;
 
@@ -217,13 +208,11 @@ function_call_params : rvalue
                        {
                          $$ = new SyntaxToken(SyntaxTokenType::FunctionCallParams);
                          $$->Children().push_back($1);
-                         //delete $1;
                        }
                      | function_call_params COMMA rvalue
                        {
                          $1->Children().push_back($3);
                          $$ = $1;
-                         //delete $3;
                        }
                      ;
                      
@@ -231,7 +220,6 @@ undef_statement : UNDEF id
                   {
                     $$ = new SyntaxToken(SyntaxTokenType::UndefToken);
                     $$->Children().push_back($2);
-                    //delete $2;
                   }
                 ;
                 
@@ -240,8 +228,6 @@ alias_statement : ALIAS literal_t literal_t
                     $$ = new SyntaxToken(SyntaxTokenType::AliasToken);
                     $$->Children().push_back($2);
                     $$->Children().push_back($3);
-                    //delete $2;
-                    //delete $3;
                   }
                 ;                
 
@@ -307,8 +293,6 @@ unless_statement : UNLESS rvalue CRLF expression_list END
                      $$ = new SyntaxToken(SyntaxTokenType::UnlessToken);
                      $$->Children().push_back($2);
                      $$->Children().push_back($4);
-                     //delete $2;
-                     //delete $4;
                    }
                  ;
 
@@ -317,8 +301,6 @@ while_statement : WHILE rvalue CRLF while_expression_list END
                     $$ = new SyntaxToken(SyntaxTokenType::WhileToken);
                     $$->Children().push_back($2);
                     $$->Children().push_back($4);
-                    //delete $2;
-                    //delete $4;
                   }
                 ;
 
@@ -326,7 +308,6 @@ while_expression_list : expression terminator
                         {
                           $$ = new SyntaxToken(SyntaxTokenType::WhileExpressionList);
                           $$->Children().push_back($1);
-                          //delete $1;
                         }
                       | RETRY terminator
                         {
@@ -342,7 +323,6 @@ while_expression_list : expression terminator
                         {
                           $1->Children().push_back($2);
                           $$ = $1;
-                          //delete $2;
                         }
                       | while_expression_list RETRY terminator
                         {
@@ -360,8 +340,6 @@ case_statement : CASE rvalue CRLF case_expression_list END
                    $$ = new SyntaxToken(SyntaxTokenType::CaseToken);
                    $$->Children().push_back($2);
                    $$->Children().push_back($4);
-                   //delete $2;
-                   //delete $4;
                  }
                | CASE rvalue CRLF case_expression_list ELSE expression_list END
                  {
@@ -371,9 +349,6 @@ case_statement : CASE rvalue CRLF case_expression_list END
                    $$->Children().push_back($2);
                    $$->Children().push_back($4);
                    $$->Children().push_back(defaultCase);
-                   //delete $2;
-                   //delete $4;
-                   //delete $6;
                  }
                ;
                
@@ -384,8 +359,6 @@ case_expression_list : WHEN rvalue CRLF expression_list
                          item->Children().push_back($2);
                          item->Children().push_back($4);
                          $$->Children().push_back(item);
-                         //delete $2;
-                         //delete $4;
                        }
                      | case_expression_list WHEN rvalue CRLF expression_list
                        {
@@ -394,8 +367,6 @@ case_expression_list : WHEN rvalue CRLF expression_list
                          item->Children().push_back($5);
                          $1->Children().push_back(item);
                          $$ = $1;
-                         //delete $3;
-                         //delete $5;
                        }
                      ;
                      
@@ -405,9 +376,6 @@ ternary_statement : rvalue TERNARY_THEN rvalue TERNARY_ELSE rvalue
                       $$->Children().push_back($1);
                       $$->Children().push_back($3);
                       $$->Children().push_back($5);
-                      //delete $1;
-                      //delete $3;
-                      //delete $5;
                     }
                   ; 
 
@@ -419,48 +387,36 @@ assignment : lvalue ASSIGN rvalue
              {
                auto oper = CreateOperationToken("PLUS", $1, $3);
                $$ = CreateAssignmentToken($1, oper);
-               //delete $1;
-               //delete $3;
                //delete oper;
              }
            | lvalue MINUS_ASSIGN rvalue
              {
                auto oper = CreateOperationToken("MINUS", $1, $3);
                $$ = CreateAssignmentToken($1, oper);
-               //delete $1;
-               //delete $3;
                //delete oper;
              }
            | lvalue MUL_ASSIGN rvalue
              {
                auto oper = CreateOperationToken("MUL", $1, $3);
                $$ = CreateAssignmentToken($1, oper);
-               //delete $1;
-               //delete $3;
                //delete oper;
              }
            | lvalue DIV_ASSIGN rvalue
              {
                auto oper = CreateOperationToken("DIV", $1, $3);
                $$ = CreateAssignmentToken($1, oper);
-               //delete $1;
-               //delete $3;
                //delete oper;
              }
            | lvalue MOD_ASSIGN rvalue
              {
                auto oper = CreateOperationToken("MOD", $1, $3);
                $$ = CreateAssignmentToken($1, oper);
-               //delete $1;
-               //delete $3;
                //delete oper;
              }
            | lvalue EXP_ASSIGN rvalue
              {
                auto oper = CreateOperationToken("EXP", $1, $3);
                $$ = CreateAssignmentToken($1, oper);
-               //delete $1;
-               //delete $3;
                //delete oper;
              }
            ;
@@ -475,13 +431,11 @@ array_definition_elements : rvalue
                             {
                               $$ = new SyntaxToken(SyntaxTokenType::ArrayDefinition);
                               $$->Children().push_back($1);
-                              //delete $1;
                             }
                           | array_definition_elements COMMA rvalue
                             {
                               $1->Children().push_back($3);
                               $$ = $1;
-                              //delete $3;
                             }
                           ;
 
@@ -490,24 +444,18 @@ array_selector : id LEFT_SBRACKET rvalue RIGHT_SBRACKET
                    $$ = new SyntaxToken(SyntaxTokenType::ArraySelector);
                    $$->Children().push_back($1);
                    $$->Children().push_back($3);
-                   //delete $1;
-                   //delete $3;
                  }
                | id_global LEFT_SBRACKET rvalue RIGHT_SBRACKET
                  {
                    $$ = new SyntaxToken(SyntaxTokenType::ArraySelector);
                    $$->Children().push_back($1);
                    $$->Children().push_back($3);
-                   //delete $1;
-                   //delete $3;
                  }
                | function_call LEFT_SBRACKET rvalue RIGHT_SBRACKET
                  {
                    $$ = new SyntaxToken(SyntaxTokenType::ArraySelector);
                    $$->Children().push_back($1);
                    $$->Children().push_back($3);
-                   //delete $1;
-                   //delete $3;
                  }
                ;
 
@@ -535,7 +483,6 @@ rvalue : lvalue { $$ = $1; }
            {
              $$ = new SyntaxToken(SyntaxTokenType::DefinedToken);
              $$->Children().push_back($2);
-             //delete $2;
            }
          | literal_t { $$ = $1; }
          | bool_t { $$ = $1; }
