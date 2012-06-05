@@ -1,9 +1,9 @@
-5
+make5
 
 require 'test'
 
 
-def greater?(a,b)
+def greater(a,b)
   return a>=b
 end
 
@@ -20,7 +20,7 @@ def strlen(str)
   while (str[i] != "\n")
     i+=1
   end
-  i
+  return i
 end
 
 # Define variables
@@ -31,6 +31,10 @@ c = a + b
 
 while (greater?(a,c))
   c -= 1
+end
+
+if (a>b)
+  c = 3
 end
 
 if (c > pi())

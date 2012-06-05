@@ -14,6 +14,7 @@ public:
 	virtual ~SyntaxToken(){};
 	virtual SyntaxTokenType GetType();
 	virtual void SetType(SyntaxTokenType type);
+  virtual string GenerateCode();
 	vector<SyntaxToken*>& Children();
 protected:
 	SyntaxTokenType type;

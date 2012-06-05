@@ -4,6 +4,7 @@
 #include "Scanner.h"
 #include "Parser.h"
 #include "Analyzer.h"
+#include "Interpreter.h"
 
 using namespace std;
 using namespace FBB;
@@ -17,4 +18,8 @@ int main()
     
     Analyzer a;
     a.Show(parser.root);
+
+    Interpreter i;
+    i.Process("output.js", parser.root);
+
 }

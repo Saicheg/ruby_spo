@@ -1,4 +1,5 @@
 #include "SyntaxToken.h"
+#include "../CodeGenerator.h"
 
 SyntaxToken::SyntaxToken(SyntaxTokenType type)
 {
@@ -18,4 +19,12 @@ void SyntaxToken::SetType(SyntaxTokenType type)
 vector<SyntaxToken*>& SyntaxToken::Children()
 {
 	return this->children;
+}
+
+string SyntaxToken::GenerateCode()
+{
+  CodeGenerator* g = new CodeGenerator();
+  string code = g->Generate(this);
+  delete(g);
+  return code;
 }
