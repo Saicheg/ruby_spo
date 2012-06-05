@@ -8,6 +8,8 @@ public:
 	IntegerSyntaxToken(long int value);
 	long int GetValue();
 	void SetValue(long int value);
+  double ToFloat();
+  string ToString();
 protected:
 	long int value;
 };

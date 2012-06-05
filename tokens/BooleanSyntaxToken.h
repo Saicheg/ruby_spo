@@ -9,6 +9,7 @@ public:
 	BooleanSyntaxToken(bool value);
 	bool GetValue();
 	void SetValue(bool value);
+  string ToString();
 protected:
 	bool value;
 };

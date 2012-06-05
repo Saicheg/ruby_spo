@@ -15,3 +15,8 @@ void BooleanSyntaxToken::SetValue(bool value)
 {
 	this->value = value;
 }
+
+string BooleanSyntaxToken::ToString()
+{
+  return value ? "true" : "false";
+}

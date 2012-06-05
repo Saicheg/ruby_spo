@@ -12,6 +12,8 @@ public:
 	StringSyntaxToken(const string& value);
 	string GetValue();
 	void SetValue(const string& value);
+  long int ToInteger();
+  double ToFloat();
 protected:
 	string str;
 };

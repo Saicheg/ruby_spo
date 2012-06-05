@@ -1,4 +1,5 @@
 #include "IntegerSyntaxToken.h"
+#include <sstream>
 
 IntegerSyntaxToken::IntegerSyntaxToken(long int value)
 {
@@ -14,4 +15,16 @@ long int IntegerSyntaxToken::GetValue()
 void IntegerSyntaxToken::SetValue(long int value)
 {
 	this->value = value;
+}
+
+double IntegerSyntaxToken::ToFloat()
+{
+  return (double) value;
+}
+
+string IntegerSyntaxToken::ToString()
+{
+  ostringstream s;
+  s << value;
+  return s.str();
 }
